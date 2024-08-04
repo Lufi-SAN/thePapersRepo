@@ -10,16 +10,16 @@ import ErrorPage from './Components/ErrorPage.jsx'
 let routes = createBrowserRouter([
   {
     path: "/",
-    element: Layout,
-    errorElement: ErrorPage,
+    element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: Home,
+        element: <Home />,
       },
       {
         path: "cart",
-        element: Cart
+        element: <Cart />
       }
     ]
   }
