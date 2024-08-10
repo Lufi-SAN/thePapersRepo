@@ -1,0 +1,35 @@
+LAYOUT
+Margin
+Padding
+Width
+Height
+Border radius
+Border width
+*BS
+*O
+Position & Coordinates
+
+TYPOGRAPHY
+Font size
+Font weight
+Line height
+Font family
+Font style
+
+COLORS
+The Color Scheme - Text & Background
+Dark Mode
+
+IMAGERY
+*Box shadows
+*Opacity
+Icons
+
+COMPONENTS
+Cards for Product list
+Form for Newsletter
+Loading indicator
+(Keep track of states. Diff variants & actions)
+
+ACCESSIBILITY
+ARIA markup
