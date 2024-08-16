@@ -37,4 +37,6 @@ function Layout() {
 }
 
 export default Layout
-
+// filtering array goes here, it depends on the url params, the url params get changed in Home; Guess we use urlparams as context??
+// Check for a change?? Then alter the array
+// Cart is an array independent of products. Maybe we use them in tow? Product details will be a dynamic segment path; With links from Home?
