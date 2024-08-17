@@ -64,3 +64,7 @@ ul>li:not(:last-child) {
 .active {
   @apply text-primary underline decoration-2;
 }
+
+#root {
+  position: relative;
+}

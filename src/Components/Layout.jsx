@@ -5,11 +5,12 @@ function Layout() {
     const componentProductsData = useLoaderData();
     const [cartCounter, setCartCounter] = useState([])
     const [filterParameter, setFilterParameter] = useSearchParams();
+    console.log(filterParameter)
 
     return (
         <>
-            <header>
-                <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 sticky top-0">
+            <header className="sticky top-0">
+                <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white">
                     <h1 className="text-[32px] font-extrabold text-primary font-azeret">the<span className="inline-block py-1 bg-primary text-white">papers</span></h1>
                     <ul className="me-0 ms-auto flex text-slate-500">
                         <li className="flex items-center"><NavLink to="/">About</NavLink></li>
