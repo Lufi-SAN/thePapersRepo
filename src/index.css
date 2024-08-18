@@ -15,6 +15,16 @@
   vertical-align: baseline;
 }
 
+#root {
+  position: relative;
+}
+
+@media (max-width: 767px) {
+  nav ul {
+    @apply text-[8px]
+  }
+}
+
 article,
 aside,
 details,
@@ -63,8 +73,4 @@ ul>li:not(:last-child) {
 
 .active {
   @apply text-primary underline decoration-2;
-}
-
-#root {
-  position: relative;
 }
