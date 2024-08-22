@@ -10,7 +10,7 @@ function Layout() {
             <header className="sticky top-0" role="header">
                 <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white">
                     <h1 className="text-[32px] font-extrabold text-primary font-azeret">the<span className="inline-block py-1 bg-primary text-white">papers</span></h1>
-                    <ul className="me-0 ms-auto flex text-slate-500">
+                    <ul className="me-0 ms-auto flex text-slate-500 navul">
                         <li className="flex items-center"><NavLink to="/">About</NavLink></li>
                         <li className="flex items-center"><NavLink to="/">Home</NavLink></li>
                         <li className="flex items-center"><NavLink to="/">GHub</NavLink></li>
