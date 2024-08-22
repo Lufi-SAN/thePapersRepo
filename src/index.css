@@ -70,5 +70,5 @@ ul.navul>li:not(:last-child) {
 }
 
 .active {
-  @apply text-primary underline decoration-2;
+  @apply text-primary underline underline-offset-4 decoration-2;
 }

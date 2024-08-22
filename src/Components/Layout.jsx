@@ -1,15 +1,24 @@
 import { useState, Suspense } from "react"
-import { Outlet, NavLink, Await, useLoaderData } from "react-router-dom"
+import { Outlet, NavLink, Await, useLoaderData, useLocation } from "react-router-dom"
 
 function Layout() {
     const componentProductsData = useLoaderData();
     const [cartCounter, setCartCounter] = useState([])
+    const location = useLocation();
+    console.log(location)
+    let colors = ["text-primary", "text-white"];
+    let textcolor, textcolor2;
+    if (location.pathname !== "/cart") {
+        [textcolor, textcolor2] = colors
+    } else {
+        [textcolor2, textcolor] = colors
+    }
 
     return (
         <>
             <header className="sticky top-0" role="header">
                 <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white">
-                    <h1 className="text-[32px] font-extrabold text-primary font-azeret">the<span className="inline-block py-1 bg-primary text-white">papers</span></h1>
+                    <h1 className={`text-[32px] font-extrabold text-primary font-azeret ${textcolor}`}>the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
                     <ul className="me-0 ms-auto flex text-slate-500 navul">
                         <li className="flex items-center"><NavLink to="/">About</NavLink></li>
                         <li className="flex items-center"><NavLink to="/">Home</NavLink></li>
@@ -24,6 +33,7 @@ function Layout() {
             <Suspense fallback={<h1>Loading...</h1>}>
                 <Await resolve={componentProductsData.productsData}>
                     {(componentProductsData) => {
+                        console.log(componentProductsData);
                         return (
                             <main>
                                 <Outlet context={[cartCounter, setCartCounter, componentProductsData]} />
