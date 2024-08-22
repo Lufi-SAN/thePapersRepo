@@ -19,12 +19,6 @@
   position: relative;
 }
 
-@media (max-width: 767px) {
-  nav ul {
-    @apply text-[8px]
-  }
-}
-
 article,
 aside,
 details,
@@ -67,8 +61,12 @@ table {
 }
 
 
-ul>li:not(:last-child) {
+ul.navul>li:not(:last-child) {
   margin-inline-end: 24px;
+}
+
+#root {
+  @apply lg:max-w-[90rem] m-auto;
 }
 
 .active {
