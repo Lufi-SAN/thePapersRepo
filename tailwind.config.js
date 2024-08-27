@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#8b5cf6"
+        primary: "#8b5cf6",
+        primaryLight: "#a78bfa"
       },
       fontFamily: {
         azeret: ['Azeret Mono', 'Roboto', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif']
