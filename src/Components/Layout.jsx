@@ -19,7 +19,7 @@ function Layout() {
             <header className="sticky top-0" role="header">
                 <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white">
                     <h1 className={`text-[30px] lg:text-[36px] font-extrabold text-primary font-azeret ${textcolor}`} aria-label="Company Logo">the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
-                    <ul className="me-0 ms-auto flex text-slate-500 navul" role="navigation">
+                    <ul className="me-0 ms-auto flex text-gray-500 navul" role="navigation">
                         <li className="flex items-center"><NavLink to="/">About</NavLink></li>
                         <li className="flex items-center"><NavLink to="/">Home</NavLink></li>
                         <li className="flex items-center"><NavLink to="/">GHub</NavLink></li>

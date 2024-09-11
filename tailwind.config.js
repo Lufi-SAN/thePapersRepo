@@ -12,7 +12,10 @@ export default {
       },
       fontFamily: {
         azeret: ['Azeret Mono', 'Roboto', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif']
-      }
+      },
+      spacing: {
+        'top-calc': 'calc(16px + 100%)',
+      },
     },
   },
   plugins: [],
