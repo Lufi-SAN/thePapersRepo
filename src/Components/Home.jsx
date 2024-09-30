@@ -2,10 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom"
 
 function Home() {
-    const [componentProductsData] = useOutletContext();
+    const { componentProductsData, location } = useOutletContext();
+
+    const filterRef = useRef(null)
 
     const [isFilterBoxExpanded, setisFilterBoxExpanded] = useState(false)
-    const filterRef = useRef(null)
+
+    function showFilterDiv() {
+        setisFilterBoxExpanded((prev) => !prev)
+    }
 
     const [zActive, setZActive] = useState({
         categoryZActive: false,
@@ -13,13 +18,6 @@ function Home() {
         ratingZActive: false,
         stockZActive: false
     })
-
-    const [filterParameter, setFilterParameter] = useSearchParams();
-    console.log(filterParameter)
-
-    function showFilterDiv() {
-        setisFilterBoxExpanded((prev) => !prev)
-    }
 
     function toggleZActive(targetKey) {
         setisFilterBoxExpanded(true)
@@ -48,14 +46,42 @@ function Home() {
         toggleZActive("stockZActive");
     }
 
-    function mensClothingCheckClicked() { }
-    function electronicsCheckClicked() { }
-    function jewelryCheckClicked() { }
-    function womensClothingCheckClicked() { }
+    const [filterParameter, setFilterParameter] = useSearchParams();
 
-    function filterFormInputHandler() {
+    const URLFilterParameter = new URLSearchParams(location.search);
+
+    function filterFormInputHandler(event) {
+        event.preventDefault();
+        setFilterParameter((prevFilterParams) => {
+            if (URLFilterParameter.has(event.target.name, event.target.dataset.value)) {
+                console.log("yes")
+                URLFilterParameter.delete(event.target.name, event.target.dataset.value)
+            } else {
+                URLFilterParameter.append(event.target.name, event.target.dataset.value)
+            }
+            let returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+            return returnObject
+        })
 
     }
+
+    const filters = {
+        category: filterParameter.getAll("category"),
+
+    }
+
+    const filterProducts = (products, filters) => {
+        return products.filter(product => {
+            const matchesCategory = filters.category.length !== 0 ? filters.category.includes(product.category) : true;
+            const matchesPrice = product.price >= (filters.priceMin || 0) && product.price <= (filters.priceMax || Infinity);
+            const matchesRating = product.rating.rate >= (filters.ratingMin || 0);
+            const matchesStock = product.rating.stock >= (filters.stockMin || 0);
+
+            return matchesCategory && matchesPrice && matchesRating && matchesStock;
+        })
+    }
+
+    const filteredComponentProductsData = filterParameter ? ["a"] : componentProductsData
 
     return (
         <>
@@ -96,33 +122,36 @@ function Home() {
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showCategoryListHandler}>Category <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"}`}>
-                                    <form onInput={filterFormInputHandler}>
-                                        <div className="flex item-center"><input type="checkbox" name="" id="mensClothing" className="h-[1rem] aspect-square" onChange={mensClothingCheckClicked} /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">men&apos;s clothing</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="" id="electronics" className="h-[1rem] aspect-square" onChange={electronicsCheckClicked} /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">electronics</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="" id="jewelry" className="h-[1rem] aspect-square" onChange={jewelryCheckClicked} /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">jewelry</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="" id="womensClothing" className="h-[1rem] aspect-square" onChange={womensClothingCheckClicked} /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">women&apos;s clothing</label></div>
+                                <div className={`p-[16px] absolute top-[100%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"} border rounded-md`}>
+                                    <form onInput={(Event) => filterFormInputHandler(Event)}>
+                                        <div className="flex item-center"><input type="checkbox" name="category" id="mensClothing" data-value="mensClothing" className="h-[1rem] aspect-square" /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">men&apos;s clothing</label></div>
+                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">electronics</label></div>
+                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="jewelry" data-value="jewelry" className="h-[1rem] aspect-square" /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">jewelry</label></div>
+                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="womensClothing" data-value="womensClothing" className="h-[1rem] aspect-square" /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">women&apos;s clothing</label></div>
                                     </form>
                                 </div>
                             </li>
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showPriceListHandler}>Price <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.priceZActive ? "z-10" : "hidden"}`}>
-                                    hi
+                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.priceZActive ? "z-10" : "hidden"} border rounded-md`}>
+                                    <form onInput={(Event) => filterFormInputHandler(Event)}>
+                                        <div className="flex item-center"><input type="checkbox" name="price" id="mensClothing" data-value="mensClothing" className="h-[1rem] aspect-square" /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">men&apos;s clothing</label></div>
+                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="price" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">electronics</label></div>
+                                    </form>
                                 </div>
                             </li>
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showRatingListHandler}>Rating <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"}`}>
+                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}>
                                     hello
                                 </div>
                             </li>
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showStockListHandler}>Stock <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"}`}>
+                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}>
                                     sup
                                 </div>
                             </li>
@@ -134,6 +163,10 @@ function Home() {
                             <p>Filters</p>
                         </div>
                     }
+
+                    <div>
+                        {filteredComponentProductsData}
+                    </div>
                 </section>
             </div>
         </>
