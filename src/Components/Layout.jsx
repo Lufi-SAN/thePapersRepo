@@ -5,7 +5,7 @@ function Layout() {
     const componentProductsData = useLoaderData();
     const [cartCounter, setCartCounter] = useState([])
     const location = useLocation();
-    console.log(location)
+
     let colors = ["text-primary", "text-white"];
     let textcolor, textcolor2;
     if (location.pathname !== "/cart") {
@@ -36,7 +36,7 @@ function Layout() {
                         console.log(componentProductsData);
                         return (
                             <main>
-                                <Outlet context={[cartCounter, setCartCounter, componentProductsData]} />
+                                <Outlet context={{ cartCounter, setCartCounter, componentProductsData, location }} />
                             </main>
                         )
                     }}
