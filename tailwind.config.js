@@ -15,6 +15,7 @@ export default {
       },
       spacing: {
         'top-calc': 'calc(16px + 100%)',
+        'card-w': 'calc(25vw - 80px)'
       },
     },
   },
