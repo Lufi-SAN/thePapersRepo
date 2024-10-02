@@ -80,3 +80,7 @@ ul.navul>li:not(:last-child) {
 .homeDiv :not(.topbar) {
   @apply lg:pl-[32px]
 }
+
+.wrapper {
+  @applyg
+}

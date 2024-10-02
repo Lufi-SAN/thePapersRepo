@@ -1,6 +1,6 @@
 export default function Card({ image, category, title, price }) {
     return (
-        <div className="flex flex-col text-center w-card-w bg-white pb-[24px]">
+        <div className="flex flex-col text-center w-card-width bg-white pb-[24px]">
             <div className="bg-gray-500 rounded-md"><img src={image} alt={title} className="w-[100%] object-cover" /></div>
             <p>{category}</p>
             <p>{title}</p>

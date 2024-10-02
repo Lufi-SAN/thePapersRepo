@@ -1,24 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom"
 
 function Home() {
     const { componentProductsData, location } = useOutletContext();
 
-    const filterRef = useRef(null)
-
+    //State to keep filter bar status
     const [isFilterBoxExpanded, setisFilterBoxExpanded] = useState(false)
-
+    //Function to change filter bar status(bool)
     function showFilterDiv() {
         setisFilterBoxExpanded((prev) => !prev)
     }
-
+    //Config for current filter option form display
     const [zActive, setZActive] = useState({
         categoryZActive: false,
         priceZActive: false,
         ratingZActive: false,
         stockZActive: false
     })
-
+    //General function to change fofd-config & toggle their display
     function toggleZActive(targetKey) {
         setisFilterBoxExpanded(true)
         setZActive((prev) => {
@@ -30,6 +29,7 @@ function Home() {
         });
     }
 
+    //Apply general function as handler to each fofd-button
     function showCategoryListHandler() {
         toggleZActive("categoryZActive");
     }
@@ -46,34 +46,93 @@ function Home() {
         toggleZActive("stockZActive");
     }
 
+    //Create SP object
     const [filterParameter, setFilterParameter] = useSearchParams();
-
+    //Create new URLSP object with every location change
     const URLFilterParameter = new URLSearchParams(location.search);
 
+    //General form input handler with input type dependent logic
     function filterFormInputHandler(event) {
         event.preventDefault();
         setFilterParameter((prevFilterParams) => {
-            if (URLFilterParameter.has(event.target.name, event.target.dataset.value)) {
-                console.log("yes")
-                URLFilterParameter.delete(event.target.name, event.target.dataset.value)
-            } else {
-                URLFilterParameter.append(event.target.name, event.target.dataset.value)
+            const typeOfInput = event.target.name;
+            let returnObject;
+
+            switch (typeOfInput) {
+                case "category":
+                    if (URLFilterParameter.has(event.target.name, event.target.dataset.value)) {
+                        console.log("yes")
+                        URLFilterParameter.delete(event.target.name, event.target.dataset.value)
+                    } else {
+                        URLFilterParameter.append(event.target.name, event.target.dataset.value)
+                    }
+                    returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+                    break;
+
+                case "priceMin" || "priceMax":
+                    typeOfInput === "priceMin" ? sliderLogic("priceMin") : sliderLogic("priceMax");
+                    break;
+
             }
-            let returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+
             return returnObject
         })
 
     }
 
+
+    //State to know slider value status
+    const [sliderOneValue, setSliderOneValue] = useState(0);
+    const [sliderTwoValue, setSliderTwoValue] = useState(1000)
+
+    function sliderLogic(whichSlider) {
+        const minGap = 0;
+        switch (whichSlider) {
+            case "priceMin":
+                if (sliderTwoValue - sliderOneValue <= minGap) {
+                    setSliderOneValue(sliderTwoValue - minGap);
+                }
+                break
+            case "priceMax":
+                if (sliderTwoValue - sliderOneValue <= minGap) {
+                    setSliderTwoValue(sliderOneValue + minGap);
+                }
+                break
+        }
+    }
+
+    function applyRangeFilter() {
+        let returnObject;
+        URLFilterParameter.set("price", `${sliderOneValue}-${sliderTwoValue}`)
+        setFilterParameter((prevFilterParams) => {
+            returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+            return returnObject
+        })
+    }
+
+    function cancelRangeFilter() {
+        let returnObject;
+        URLFilterParameter.delete("price");
+        setFilterParameter((prevFilterParams) => {
+            returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+            return returnObject
+        })
+        setSliderOneValue(0)
+        setSliderTwoValue(1000)
+    }
+
+    //Filter config 
     const filters = {
         category: filterParameter.getAll("category"),
+        price: filterParameter.get("price")?.split('-') || [],
 
     }
 
+    //Function to filter the products array according to filter config 
     const filterProducts = (products, filters) => {
         return products.filter(product => {
             const matchesCategory = filters.category.length !== 0 ? filters.category.includes(product.category) : true;
-            const matchesPrice = product.price >= (filters.priceMin || 0) && product.price <= (filters.priceMax || Infinity);
+            const matchesPrice = filters.price.length !== 0 ? filters.price[0] <= product.price <= filters.price[1] : true;
             const matchesRating = product.rating.rate >= (filters.ratingMin || 0);
             const matchesStock = product.rating.stock >= (filters.stockMin || 0);
 
@@ -81,6 +140,7 @@ function Home() {
         })
     }
 
+    //End array for use in UI
     const filteredComponentProductsData = filterParameter ? ["a"] : componentProductsData
 
     return (
@@ -136,8 +196,15 @@ function Home() {
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showPriceListHandler}>Price <span className="align-text-top">&#8964;</span></button>
                                 <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.priceZActive ? "z-10" : "hidden"} border rounded-md`}>
                                     <form onInput={(Event) => filterFormInputHandler(Event)}>
-                                        <div className="flex item-center"><input type="checkbox" name="price" id="mensClothing" data-value="mensClothing" className="h-[1rem] aspect-square" /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">men&apos;s clothing</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="price" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">electronics</label></div>
+                                        <div className="sliderWrapper">
+                                            <div className="sliderContainer">
+                                                <div className="slider-track"></div>
+                                                <input type="range" min="0" max="1000" value={sliderOneValue} id="slider-1" name="priceMin" data-value={sliderOneValue} onChange={(event) => setSliderOneValue(parseInt(event.target.value))} />
+                                                <input type="range" min="0" max="1000" value={sliderTwoValue} id="slider-2" name="priceMax" data-value={sliderTwoValue} onChange={(event) => setSliderTwoValue(parseInt(event.target.value))} />
+                                            </div>
+                                            <button type="button" onClick={applyRangeFilter}>Apply</button>
+                                            <button type="button" onClick={cancelRangeFilter}>Cancel</button>
+                                        </div>
                                     </form>
                                 </div>
                             </li>
@@ -159,7 +226,7 @@ function Home() {
                     </div>
 
                     {
-                        isFilterBoxExpanded && <div role="Product Filters" id="filterBoxDiv" aria-expanded={isFilterBoxExpanded} className="flex" ref={filterRef}>
+                        isFilterBoxExpanded && <div role="Product Filters" id="filterBoxDiv" aria-expanded={isFilterBoxExpanded} className="flex" >
                             <p>Filters</p>
                         </div>
                     }
