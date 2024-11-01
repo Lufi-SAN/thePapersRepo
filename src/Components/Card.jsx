@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function Card({ image, category, title, price }) {
     return (
         <div className="flex flex-col text-center w-card-width bg-white pb-[24px]">
@@ -7,6 +9,13 @@ export default function Card({ image, category, title, price }) {
             <p>{price}</p>
         </div>
     )
+}
+
+Card.propTypes = {
+    image: PropTypes.string,
+    category: PropTypes.string,
+    title: PropTypes.string,
+    price: PropTypes.number,
 }
 // category
 // : 
@@ -30,3 +39,4 @@ export default function Card({ image, category, title, price }) {
 // : 
 // "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
 //0)_-
+

@@ -17,6 +17,9 @@ export default {
         'top-calc': 'calc(16px + 100%)',
         'card-width': 'calc(25vw - 80px)'
       },
+      accentColor: {
+        primary: "#8b5cf6",
+      }
     },
   },
   plugins: [],

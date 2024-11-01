@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom"
 
 function Home() {
@@ -56,21 +56,16 @@ function Home() {
         event.preventDefault();
         setFilterParameter((prevFilterParams) => {
             const typeOfInput = event.target.name;
-            let returnObject;
+            let returnObject = { ...prevFilterParams };
 
             switch (typeOfInput) {
                 case "category":
                     if (URLFilterParameter.has(event.target.name, event.target.dataset.value)) {
-                        console.log("yes")
                         URLFilterParameter.delete(event.target.name, event.target.dataset.value)
                     } else {
                         URLFilterParameter.append(event.target.name, event.target.dataset.value)
                     }
                     returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-                    break;
-
-                case "priceMin" || "priceMax":
-                    typeOfInput === "priceMin" ? sliderLogic("priceMin") : sliderLogic("priceMax");
                     break;
 
             }
@@ -80,45 +75,67 @@ function Home() {
 
     }
 
+    const sliderOneRef = useRef(null)
+    const sliderTwoRef = useRef(null)
+    const sliderTrackRef = useRef(null)
+    const minNumberRef = useRef(null)
+    const maxNumberRef = useRef(null)
 
-    //State to know slider value status
-    const [sliderOneValue, setSliderOneValue] = useState(0);
-    const [sliderTwoValue, setSliderTwoValue] = useState(1000)
-
-    function sliderLogic(whichSlider) {
+    function rangeLogicHandler(id) {
         const minGap = 0;
-        switch (whichSlider) {
-            case "priceMin":
-                if (sliderTwoValue - sliderOneValue <= minGap) {
-                    setSliderOneValue(sliderTwoValue - minGap);
-                }
-                break
-            case "priceMax":
-                if (sliderTwoValue - sliderOneValue <= minGap) {
-                    setSliderTwoValue(sliderOneValue + minGap);
-                }
-                break
+        const sliderOneValue = ((parseInt(sliderOneRef.current.value) / 1000) * 100)
+        const sliderTwoValue = ((parseInt(sliderTwoRef.current.value) / 1000) * 100)
+
+        if (sliderTwoRef.current.value === 0) {
+            sliderTwoRef.current.style.zIndex = 1000;
+        } else {
+            sliderTwoRef.current.style.zIndex = 0;
+        }
+
+        if (id === sliderOneRef.current.name) {
+            if (parseInt(sliderTwoRef.current.value) - parseInt(sliderOneRef.current.value) <= minGap) {
+                sliderOneRef.current.value = parseInt(sliderTwoRef.current.value) - minGap;
+            }
+        } else {
+            if (parseInt(sliderTwoRef.current.value) - parseInt(sliderOneRef.current.value) <= minGap) {
+                sliderTwoRef.current.value = parseInt(sliderOneRef.current.value) + minGap;
+            }
+        }
+
+        minNumberRef.current.value = sliderOneRef.current.value;
+        maxNumberRef.current.value = sliderTwoRef.current.value;
+        sliderTrackRef.current.style.background = `linear-gradient(to right, #e5e7eb ${sliderOneValue}%, #8b5cf6 ${sliderOneValue}% ${sliderTwoValue}%, #e5e7eb ${sliderTwoValue}%)`
+    }
+
+    function numberInputHandler(value, inputID) {
+        const min = 0;
+
+        if (inputID === "Min") {
+            if (value >= maxNumberRef.current.value) {
+                minNumberRef.current.value = Number(maxNumberRef.current.value) - min
+            }
+        } else if (inputID === "Max") {
+            if (value <= minNumberRef.current.value) {
+                maxNumberRef.current.value = Number(minNumberRef.current.value) + min
+            }
         }
     }
 
     function applyRangeFilter() {
-        let returnObject;
-        URLFilterParameter.set("price", `${sliderOneValue}-${sliderTwoValue}`)
-        setFilterParameter((prevFilterParams) => {
-            returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-            return returnObject
-        })
+        const newParams = new URLSearchParams(location.search)
+        newParams.set('price', `${minNumberRef.current.value}-${maxNumberRef.current.value}`)
+        setFilterParameter(newParams);
     }
 
     function cancelRangeFilter() {
-        let returnObject;
-        URLFilterParameter.delete("price");
-        setFilterParameter((prevFilterParams) => {
-            returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-            return returnObject
-        })
-        setSliderOneValue(0)
-        setSliderTwoValue(1000)
+        const newParams = new URLSearchParams(location.search)
+        newParams.delete("price");
+        setFilterParameter(newParams)//I ended up with ?price = undefined in URL so I like it better this way
+        minNumberRef.current.value = 0
+        maxNumberRef.current.value = 1000
+        sliderOneRef.current.value = 0
+        sliderTwoRef.current.value = 1000
+        sliderTrackRef.current.style.background = '#8b5cf6';
     }
 
     //Filter config 
@@ -127,6 +144,7 @@ function Home() {
         price: filterParameter.get("price")?.split('-') || [],
 
     }
+    console.log(filters)
 
     //Function to filter the products array according to filter config 
     const filterProducts = (products, filters) => {
@@ -182,8 +200,8 @@ function Home() {
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showCategoryListHandler}>Category <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"} border rounded-md`}>
-                                    <form onInput={(Event) => filterFormInputHandler(Event)}>
+                                <div className={`p-[16px] absolute top-[150%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"} border rounded-md`}>
+                                    <form onInput={(Event) => filterFormInputHandler(Event)} className="accent-primary">
                                         <div className="flex item-center"><input type="checkbox" name="category" id="mensClothing" data-value="mensClothing" className="h-[1rem] aspect-square" /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">men&apos;s clothing</label></div>
                                         <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">electronics</label></div>
                                         <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="jewelry" data-value="jewelry" className="h-[1rem] aspect-square" /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap">jewelry</label></div>
@@ -194,15 +212,21 @@ function Home() {
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showPriceListHandler}>Price <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.priceZActive ? "z-10" : "hidden"} border rounded-md`}>
-                                    <form onInput={(Event) => filterFormInputHandler(Event)}>
-                                        <div className="sliderWrapper">
-                                            <div className="sliderContainer">
-                                                <div className="slider-track"></div>
-                                                <input type="range" min="0" max="1000" value={sliderOneValue} id="slider-1" name="priceMin" data-value={sliderOneValue} onChange={(event) => setSliderOneValue(parseInt(event.target.value))} />
-                                                <input type="range" min="0" max="1000" value={sliderTwoValue} id="slider-2" name="priceMax" data-value={sliderTwoValue} onChange={(event) => setSliderTwoValue(parseInt(event.target.value))} />
-                                            </div>
-                                            <button type="button" onClick={applyRangeFilter}>Apply</button>
+                                <div className={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.priceZActive ? "z-10" : "hidden"} border rounded-md`}>
+                                    <form className="whitespace-nowrap">
+                                        <div data-slider-container className="relative pb-[32px]">
+                                            <div data-slider-track className="w-full h-[5px] absolute m-auto top-0 bottom-0 rounded-[5px] bg-primary" ref={sliderTrackRef}></div>
+                                            <input type="range" min="0" max="1000" defaultValue={0} name="priceMinSlider" ref={sliderOneRef} onChange={() => { rangeLogicHandler("priceMinSlider") }} className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none z-10`} />
+                                            <input type="range" min="0" max="1000" defaultValue={1000} name="priceMaxSlider" ref={sliderTwoRef} onChange={() => { rangeLogicHandler("priceMaxSlider") }} className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none`} />
+                                        </div>
+
+                                        <div data-numberInputForSlider className="flex mt-[16px] ">
+                                            <input type="number" defaultValue={0} min={0} max={1000} placeholder="Min" ref={minNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Min")} />
+                                            <div className="outline-pink-500 outline">&mdash;</div>
+                                            <input type="number" defaultValue={1000} min={0} max={1000} placeholder="Max" ref={maxNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Max")} />
+                                        </div>
+                                        <div className="mt-[32px]">
+                                            <button type="button" onClick={applyRangeFilter} className="mr-[32px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200">Apply</button>
                                             <button type="button" onClick={cancelRangeFilter}>Cancel</button>
                                         </div>
                                     </form>
@@ -211,14 +235,14 @@ function Home() {
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showRatingListHandler}>Rating <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}>
-                                    hello
+                                <div className={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}>
+                                    <input type="image" src="" alt="" />
                                 </div>
                             </li>
 
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showStockListHandler}>Stock <span className="align-text-top">&#8964;</span></button>
-                                <div className={`p-[16px] absolute top-[100%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}>
+                                <div className={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}>
                                     sup
                                 </div>
                             </li>
@@ -256,4 +280,4 @@ export default Home
 // }
 
 // ["men's clothing", "jewelry", "electronics", "women's clothing"] Price: 0 - 50.99, 51 - 249.99, 250 - 499.99, 500+; 
-// rating.rate: 1 - 1.9; rating.count: 0 - 499, 500+ 
+// rating.rate: 1 - 1.9; rating.count: 0 - 499, 500+
