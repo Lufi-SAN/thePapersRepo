@@ -15,10 +15,14 @@ export default {
       },
       spacing: {
         'top-calc': 'calc(16px + 100%)',
-        'card-width': 'calc(25vw - 80px)'
+        'card-width': 'calc(25vw - 80px)',
+        'card-height': 'calc(calc(25vw - 80px  * 3))'
       },
       accentColor: {
         primary: "#8b5cf6",
+      },
+      width: {
+        '75ch': '75ch'
       }
     },
   },

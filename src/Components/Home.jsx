@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom"
+import Card from "./Card"
 
 function Home() {
     const { componentProductsData, location } = useOutletContext();
@@ -68,11 +69,13 @@ function Home() {
                     returnObject = Object.assign(URLFilterParameter, prevFilterParams)
                     break;
                 case "rating":
-                    if (URLFilterParameter.has(event.target.name, `${event.target.dataset.bottomValue}-${event.target.dataset.topValue}`)) {
-                        URLFilterParameter.delete(event.target.name, `${event.target.dataset.bottomValue}-${event.target.dataset.topValue}`)
-                    } else {
-                        URLFilterParameter.append(event.target.name, `${event.target.dataset.bottomValue}-${event.target.dataset.topValue}`)
-                    }
+                    URLFilterParameter.delete(event.target.name)
+                    URLFilterParameter.append(event.target.name, `${event.target.dataset.value}-5`)
+                    returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+                    break;
+                case "stock":
+                    URLFilterParameter.delete(event.target.name)
+                    URLFilterParameter.append(event.target.name, `${event.target.dataset.downValue}-${event.target.dataset.upValue}`)
                     returnObject = Object.assign(URLFilterParameter, prevFilterParams)
                     break;
 
@@ -88,8 +91,11 @@ function Home() {
     const sliderTrackRef = useRef(null)
     const minNumberRef = useRef(null)
     const maxNumberRef = useRef(null)
+    const applyButtonRef = useRef(null)
+    const [priceErrorMessage, setPriceErrorMessage] = useState(false)
 
     function rangeLogicHandler(id) {
+        applyRangeButtonDisplayControls()
         const minGap = 0;
         const sliderOneValue = ((parseInt(sliderOneRef.current.value) / 1000) * 100)
         const sliderTwoValue = ((parseInt(sliderTwoRef.current.value) / 1000) * 100)
@@ -116,6 +122,12 @@ function Home() {
     }
 
     function numberInputHandler(value, inputID) {
+        applyRangeButtonDisplayControls()
+        if (!minNumberRef.current.value || !maxNumberRef.current.value) {
+            applyButtonRef.current.disabled = true
+            applyButtonRef.current.classList.add("greyscaleapplybutton")
+            setPriceErrorMessage(true)
+        }
         const min = 0;
 
         if (inputID === "Min") {
@@ -146,29 +158,48 @@ function Home() {
         sliderTrackRef.current.style.background = '#8b5cf6';
     }
 
+    function applyRangeButtonDisplayControls() {
+        applyButtonRef.current.disabled = false
+        applyButtonRef.current.classList.remove("greyscaleapplybutton")
+        setPriceErrorMessage(false)
+    }
+
+    function resetButtonHandler(type) {
+        setFilterParameter((prevFilterParams) => {
+            let returnObject;
+            URLFilterParameter.delete(type)
+            returnObject = Object.assign(URLFilterParameter, prevFilterParams)
+            return returnObject
+        })
+    }
+
     //Filter config 
     const filters = {
         category: filterParameter.getAll("category"),
         price: filterParameter.get("price")?.split('-') || [],
-        rating: filterParameter.getAll("rating").length !== 0 ? Array.from(new Set(Array.from(filterParameter.getAll("rating")).join().split("-").join(",").split(","))) : [],
+        rating: filterParameter.get("rating")?.split('-') || [],
+        stock: filterParameter.get("stock") ? filterParameter.get("stock").split("-").map((item) => Number(item)) : []
 
     }
-    console.log(filters)
+    // rating: filterParameter.getAll("rating").length !== 0 ? Array.from(new Set(Array.from(filterParameter.getAll("rating")).join().split("-").join(",").split(","))) : []
+    // Above was my method for chnaging the 4-5/2-3/etc. to a sorted array with no repeated numbers. I'm keeping it in here cause its cool 
+    // This was the filter config: const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
+
 
     //Function to filter the products array according to filter config 
     const filterProducts = (products, filters) => {
         return products.filter(product => {
             const matchesCategory = filters.category.length !== 0 ? filters.category.includes(product.category) : true;
-            const matchesPrice = filters.price.length !== 0 ? filters.price[0] <= product.price <= filters.price[1] : true;
-            const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
-            const matchesStock = product.rating.stock >= (filters.stockMin || 0);
+            const matchesPrice = filters.price.length !== 0 ? filters.price[0] <= product.price && product.price <= filters.price[1] : true;
+            const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate && product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
+            const matchesStock = filters.stock.length !== 0 ? filters.stock[0] <= product.rating.stock && product.rating.stock <= filters.stock[1] : true;
 
             return matchesCategory && matchesPrice && matchesRating && matchesStock;
         })
     }
 
     //End array for use in UI
-    const filteredComponentProductsData = filterParameter ? ["a"] : componentProductsData
+    const filteredComponentProductsData = filterParameter ? filterProducts(componentProductsData, filters) : componentProductsData
 
     return (
         <>
@@ -211,10 +242,10 @@ function Home() {
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showCategoryListHandler}>Category <span className="align-text-top">&#8964;</span></button>
                                 <div className={`p-[16px] absolute top-[150%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"} border rounded-md`}>
                                     <form onInput={(event) => filterFormInputHandler(event)}>
-                                        <div className="flex item-center"><input type="checkbox" name="category" id="mensClothing" data-value="mensClothing" className="h-[1rem] aspect-square" /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">men&apos;s clothing</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">electronics</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="jewelry" data-value="jewelry" className="h-[1rem] aspect-square" /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">jewelry</label></div>
-                                        <div className="flex item-center mt-[16px]"><input type="checkbox" name="category" id="womensClothing" data-value="womensClothing" className="h-[1rem] aspect-square" /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label></div>
+                                        <div className="flex item-center mt-[8px]"><input type="checkbox" name="category" id="mensClothing" data-value="men's clothing" className="h-[1rem] aspect-square" /><label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">men&apos;s clothing</label></div>
+                                        <div className="flex item-center mt-[24px]"><input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">electronics</label></div>
+                                        <div className="flex item-center mt-[24px]"><input type="checkbox" name="category" id="jewelry" data-value="jewelery" className="h-[1rem] aspect-square" /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">jewelery</label></div>
+                                        <div className="flex item-center mt-[24px] mb-[8px]"><input type="checkbox" name="category" id="women's clothing" data-value="womensClothing" className="h-[1rem] aspect-square" /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label></div>
                                     </form>
                                 </div>
                             </li>
@@ -230,13 +261,14 @@ function Home() {
                                         </div>
 
                                         <div data-numberinputforslider className="flex mt-[16px] ">
-                                            <input type="number" defaultValue={0} min={0} max={1000} placeholder="Min" ref={minNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Min")} />
-                                            <div className="outline-pink-500 outline">&mdash;</div>
-                                            <input type="number" defaultValue={1000} min={0} max={1000} placeholder="Max" ref={maxNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Max")} />
+                                            <input type="number" defaultValue={0} min={0} max={1000} placeholder="Min" ref={minNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Min")} className="border border-gray-300 rounded p-[8px]" />
+                                            <div className="px-[8px] flex justify-center items-center">&ndash;</div>
+                                            <input type="number" defaultValue={1000} min={0} max={1000} placeholder="Max" ref={maxNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Max")} className="border border-gray-300 rounded p-[8px]" />
                                         </div>
-                                        <div className="mt-[32px]">
-                                            <button type="button" onClick={applyRangeFilter} className="mr-[32px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold">Apply</button>
+                                        <div className="mt-[24px]">
+                                            <button type="button" onClick={applyRangeFilter} className="mr-[32px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" ref={applyButtonRef}>Apply</button>
                                             <button type="button" onClick={cancelRangeFilter} className="font-semibold">Cancel</button>
+                                            {priceErrorMessage && <p className="text-red-500 font-semibold mt-[8px] whitespace-normal leading-[1.5]">PLease input a numeric value between the range of 0 to 1000</p>}
                                         </div>
                                     </form>
                                 </div>
@@ -245,11 +277,12 @@ function Home() {
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showRatingListHandler}>Rating <span className="align-text-top">&#8964;</span></button>
                                 <div className={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}>
-                                    <form onInput={(event) => filterFormInputHandler(event)}>
-                                        <div className="flex item-center"><input type="checkbox" name="rating" className="h-[1rem] aspect-square self-center" data-bottom-value="1" data-top-value="2" /><label htmlFor="twoTop" className="font-semibold ml-[12px] text-[1rem] mr-[16px]">1-2<span className="material-symbols-outlined align-text-bottom">grade</span></label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="checkbox" name="rating" className="h-[1rem] aspect-square self-center" data-bottom-value="2" data-top-value="3" /><label htmlFor="threeTop" className="font-semibold ml-[12px] text-[1rem]">2-3<span className="material-symbols-outlined align-text-bottom">grade</span></label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="checkbox" name="rating" className="h-[1rem] aspect-square self-center" data-bottom-value="3" data-top-value="4" /><label htmlFor="fourTop" className="font-semibold ml-[12px] text-[1rem]">3-4<span className="material-symbols-outlined align-text-bottom">grade</span></label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="checkbox" name="rating" className="h-[1rem] aspect-square self-center" data-bottom-value="4" data-top-value="5" /><label htmlFor="fiveTop" className="font-semibold ml-[12px] text-[1rem]">4-5<span className="material-symbols-outlined align-text-bottom">grade</span></label></div>
+                                    <form onInput={(event) => filterFormInputHandler(event)} className="whitespace-nowrap">
+                                        <div className="flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value4" data-value="4" /><label htmlFor="value4" className="font-semibold ml-[12px] text-[1rem] mr-[16px]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value3" data-value="3" /><label htmlFor="value3" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value2" data-value="2" /><label htmlFor="value2" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value1" data-value="1" /><label htmlFor="value1" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={resetButtonHandler("rating")}>Reset</button>
                                     </form>
                                 </div>
                             </li>
@@ -257,7 +290,12 @@ function Home() {
                             <li className="relative px-[16px]">
                                 <button className="text-[18px] font-bold hover:text-black focus:text-black" onClick={showStockListHandler}>Stock <span className="align-text-top">&#8964;</span></button>
                                 <div className={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}>
-                                    sup
+                                    <form onInput={(event) => filterFormInputHandler(event)} className="whitespace-nowrap">
+                                        <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} /><label htmlFor="under250">0-249</label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="under500" data-down-value={250} data-up-value={499} /><label htmlFor="under500">250-499</label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="toInfinity" data-down-value={500} data-up-value="Infinity" /><label htmlFor="toInfinity">500+</label></div>
+                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={resetButtonHandler("stock")}>Reset</button>
+                                    </form>
                                 </div>
                             </li>
                         </ul>
@@ -269,11 +307,11 @@ function Home() {
                         </div>
                     }
 
-                    <div>
-                        {filteredComponentProductsData}
+                    <div className="px-[4px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-[24px]">
+                        {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image} key={product.id} classNames={{ picture: 'h-[card-height] w-[card-width]', pictureDiv: 'rounded-md', mainDiv: "flex flex-col text-center bg-white", secondP: 'w-75ch' }} />)}
                     </div>
-                </section>
-            </div>
+                </section >
+            </div >
         </>
     )
 }
@@ -289,7 +327,7 @@ export default Home
 //         <div>
 //             {categoryName}
 //             <button type="button" onClick={ }>X</button>
-//         </div>
+//         </div>\\\\\\\\\
 //     )
 // }
 

@@ -1,9 +1,8 @@
 import { defer } from "react-router-dom";
 import fetchProductDataFunction from "../Utilities/fetchProductDataFunction";
 
-export function fetchProductsLoader({ request, params }) {
+export function fetchProductsLoader({ request }) {
     let requestURL = new URL(request.url);
-    console.log(`FROM fetchProductsLoader>> request:${request} & URL: ${requestURL} & params:${params}`)
     let productsData = fetchProductDataFunction();
     return defer({ productsData, requestURL });
 }

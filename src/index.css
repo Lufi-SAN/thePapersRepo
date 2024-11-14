@@ -139,3 +139,11 @@ input[type="range"]:active::-webkit-slider-thumb {
   background-color: #ffffff;
   border: 1px solid #8b5cf6;
 }
+
+.material-symbols-outlined {
+  @apply text-primary
+}
+
+.greyscaleapplybutton {
+  filter: grayscale(100%);
+}
