@@ -3,6 +3,7 @@ import { useOutletContext, useSearchParams } from "react-router-dom"
 import Card from "./Card"
 
 function Home() {
+    console.log("Outlet Context:", useOutletContext());
     const { componentProductsData, location } = useOutletContext();
 
     //State to keep filter bar status
@@ -282,7 +283,7 @@ function Home() {
                                         <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value3" data-value="3" /><label htmlFor="value3" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
                                         <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value2" data-value="2" /><label htmlFor="value2" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
                                         <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value1" data-value="1" /><label htmlFor="value1" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
-                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={resetButtonHandler("rating")}>Reset</button>
+                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => resetButtonHandler("rating")}>Reset</button>
                                     </form>
                                 </div>
                             </li>
@@ -294,7 +295,7 @@ function Home() {
                                         <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} /><label htmlFor="under250">0-249</label></div>
                                         <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="under500" data-down-value={250} data-up-value={499} /><label htmlFor="under500">250-499</label></div>
                                         <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="toInfinity" data-down-value={500} data-up-value="Infinity" /><label htmlFor="toInfinity">500+</label></div>
-                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={resetButtonHandler("stock")}>Reset</button>
+                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => resetButtonHandler("stock")}>Reset</button>
                                     </form>
                                 </div>
                             </li>
@@ -315,21 +316,4 @@ function Home() {
         </>
     )
 }
-// Grid goes here, it depends on the product array which can be filtered or not, we have the newsletter form & Carousel* & aside for hiring, maybe testimonials
-// and an extra banner; We change the url params here(function to change the url params)
-// Won't be full width; Can do with auto margins + max-width, flex or grid entire thing
-// We'll filter here i guess
-//My tailwind JIT isn't responding, heaven knows why
 export default Home
-
-// function FilterDivBoxes(categoryName) {
-//     return (
-//         <div>
-//             {categoryName}
-//             <button type="button" onClick={ }>X</button>
-//         </div>\\\\\\\\\
-//     )
-// }
-
-// ["men's clothing", "jewelry", "electronics", "women's clothing"] Price: 0 - 50.99, 51 - 249.99, 250 - 499.99, 500+; 
-// rating.rate: 1 - 1.9; rating.count: 0 - 499, 500+

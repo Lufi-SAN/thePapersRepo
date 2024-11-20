@@ -18,7 +18,7 @@ let routes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: <Home />
       },
       {
         path: "cart",
@@ -35,5 +35,5 @@ let routes = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={routes} />
-  </React.StrictMode>,
+  </React.StrictMode>
 )
