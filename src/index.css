@@ -147,3 +147,7 @@ input[type="range"]:active::-webkit-slider-thumb {
 .greyscaleapplybutton {
   filter: grayscale(100%);
 }
+
+.card-width {
+  width: calc(25vw - 80px)
+}

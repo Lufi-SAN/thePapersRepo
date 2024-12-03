@@ -13,11 +13,6 @@ export default {
       fontFamily: {
         azeret: ['Azeret Mono', 'Roboto', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif']
       },
-      spacing: {
-        'top-calc': 'calc(16px + 100%)',
-        'card-width': 'calc(25vw - 80px)',
-        'card-height': 'calc(calc(25vw - 80px  * 3))'
-      },
       accentColor: {
         primary: "#8b5cf6",
       },

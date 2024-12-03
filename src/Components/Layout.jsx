@@ -16,7 +16,7 @@ function Layout() {
 
     return (
         <>
-            <header className="sticky top-0" role="header">
+            <header className="sticky top-0 z-[555]" role="header">
                 <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white">
                     <h1 className={`text-[30px] lg:text-[36px] font-extrabold text-primary font-azeret ${textcolor}`} aria-label="Company Logo">the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
                     <ul className="me-0 ms-auto flex text-gray-500 navul" role="navigation">
