@@ -223,9 +223,9 @@ function Home() {
                     </ul>
                     <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 ">
                         <div className="pt-[96px] p-[48px] w-auto lg:py-[256px] lg:pl-[32px] lg:pr-[48px] bg-gray-50">
-                            <p className="font-bold text-[48px] mb-[32px]">It&apos;s shiny cause it&apos;s good for you</p>
+                            <p className="font-bold text-[36px] lg:text-[48px] mb-[32px]">It&apos;s shiny cause it&apos;s good for you</p>
                             <p className="leading-normal text-gray-600 mb-[32px] text-[20px]">If a ring is a piece of jewellery I&apos;ll be wearing for the rest of my life, a minimum 10k investment isn&apos;t insane in the grand scheme of things</p>
-                            <button type="button" className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary hover:cursor-pointer">Shop Jewelry</button>
+                            <button type="button" className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary">Shop Jewelry</button>
                         </div>
                         <div>
                             <img src="/TheOneRing_1280.jpg" alt="A ring of great power" srcSet="/TheOneRing_500.jpg 500w, /TheOneRing_768.jpg 768w, /TheOneRing_1280.jpg 1280w" className="h-[100%] object-cover" />
@@ -253,7 +253,7 @@ function Home() {
                                             men&apos;s clothing</label></div>
                                         <div className="flex item-center mt-[24px]"><input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">electronics</label></div>
                                         <div className="flex item-center mt-[24px]"><input type="checkbox" name="category" id="jewelry" data-value="jewelery" className="h-[1rem] aspect-square" /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">jewelery</label></div>
-                                        <div className="flex item-center mt-[24px] mb-[8px]"><input type="checkbox" name="category" id="women's clothing" data-value="womensClothing" className="h-[1rem] aspect-square" /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label></div>
+                                        <div className="flex item-center mt-[24px] mb-[8px]"><input type="checkbox" name="category" id="womensClothing" data-value="women's clothing" className="h-[1rem] aspect-square" /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label></div>
                                 </FilterForm>
                             </li>
 
@@ -298,7 +298,7 @@ function Home() {
                             <li className="relative px-[16px]">
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black"} buttonOnClick={showStockListHandler}
                                 buttonText={"Stock"} spanClasses={"align-text-top"} spanText={"\u2304"}
-                                divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}
+                                divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}
                                 formOnInput={(event) => filterFormInputHandler(event)} formClasses={"whitespace-nowrap"}>
                                         <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} /><label htmlFor="under250">0-249</label></div>
                                         <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="under500" data-down-value={250} data-up-value={499} /><label htmlFor="under500">250-499</label></div>
@@ -316,10 +316,20 @@ function Home() {
                     }
 
                     <div className="mt-[16px] px-[16px] pt-[16px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
-                        {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image} key={product.id} classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-bold mb-[4px]", thirdP: "font-semibold mb-[4px]" }} />)}
+                        {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image} key={product.id} classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[4px]", thirdP: "font-semibold mb-[4px]" }} />)}
                     </div>
                 </section >
-            </div >
+
+                <section aria-label="About page link">
+                    <div className="bg-purple-200">
+                        <div className="flex flex-col">
+                            <p className="font-bold text-[36px] lg:text-[48px]">Want to connect with us further?</p>
+                            <p>Get to know about us. We are a blah blah blah blah blah</p>
+                            <button className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary ">About us</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </>
     )
 }

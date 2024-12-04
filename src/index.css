@@ -87,6 +87,14 @@ ul.navul>li:not(:last-child) {
   -moz-appearance: none;
 }
 
+input[type="number"] {
+  transition: 0.3s border ease-in;
+}
+
+input:not([type="range"]):hover {
+  border: 2px solid #8b5cf6;
+}
+
 input[type="range"]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   height: 5px;
@@ -151,3 +159,8 @@ input[type="range"]:active::-webkit-slider-thumb {
 .card-width {
   width: calc(25vw - 80px)
 }
+
+button:hover {
+  cursor: pointer;
+}
+
