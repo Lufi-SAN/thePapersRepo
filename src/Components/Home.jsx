@@ -222,20 +222,24 @@ function Home() {
                         </li>
                     </ul>
                     <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 ">
-                        <div className="pt-[96px] p-[48px] w-auto lg:py-[256px] lg:pl-[32px] lg:pr-[48px] bg-gray-50">
-                            <p className="font-bold text-[36px] lg:text-[48px] mb-[32px]">It&apos;s shiny cause it&apos;s good for you</p>
-                            <p className="leading-normal text-gray-600 mb-[32px] text-[20px]">If a ring is a piece of jewellery I&apos;ll be wearing for the rest of my life, a minimum 10k investment isn&apos;t insane in the grand scheme of things</p>
-                            <button type="button" className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary">Shop Jewelry</button>
+                        
+                        <div className="bg-gray-50 flex flex-col justify-center">
+                            <div className="p-[30px]">
+                                <p className="font-bold text-[36px] lg:text-[60px] mb-[24px]">It&apos;s shiny cause it&apos;s good for you</p>
+                                <p className="leading-normal text-gray-600 mb-[24px] text-[20px]">If a ring is a piece of jewellery I&apos;ll be wearing for the rest of my life, a minimum 10k investment isn&apos;t insane in the grand scheme of things</p>
+                                <button type="button" className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary">Shop Jewelry</button>
+                            </div>
                         </div>
+
                         <div>
-                            <img src="/TheOneRing_1280.jpg" alt="A ring of great power" srcSet="/TheOneRing_500.jpg 500w, /TheOneRing_768.jpg 768w, /TheOneRing_1280.jpg 1280w" className="h-[100%] object-cover" />
+                            <img src="/TheOneRing_1280.jpg" alt="A ring of great power" srcSet="/TheOneRing_500.jpg 500w, /TheOneRing_768.jpg 768w, /TheOneRing_1280.jpg 1280w" className="w-[100%] aspect-[0.67] object-cover " />
                         </div>
                     </div>
                 </section>
 
-                <section aria-labelledby="Product List" className="pt-[96px] lg:pl-[32px]">
-                    <h2 id="Product List" className="text-[24px] font-bold">Our Products</h2>
-                    <div className="flex pt-[8px] text-gray-500">
+                <section aria-labelledby="Product List" className="pt-[96px]">
+                    <h2 id="Product List" className="text-[30px] font-bold pl-[16px]">Our Products</h2>
+                    <div className="flex pt-[8px] text-gray-500 pl-[16px]">
                         <button aria-controls="filterBoxDiv" onClick={showFilterDiv} className="text-primary text-[18px] font-bold">Filters <span className="align-text-top">&#8964;</span></button>
 
                         <ul className="me-0 ms-auto flex divide-x accent-primary" role="Filter Options">
@@ -315,18 +319,22 @@ function Home() {
                         </div>
                     }
 
-                    <div className="mt-[16px] px-[16px] pt-[16px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
-                        {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image} key={product.id} classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[4px]", thirdP: "font-semibold mb-[4px]" }} />)}
+                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
+                        {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image}
+                         key={product.id} 
+                         classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
+                         pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", 
+                         firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]" }} />)}
                     </div>
-                </section >
+                </section>
 
                 <section aria-label="About page link">
-                    <div className="bg-purple-200">
-                        <div className="flex flex-col">
-                            <p className="font-bold text-[36px] lg:text-[48px]">Want to connect with us further?</p>
-                            <p>Get to know about us. We are a blah blah blah blah blah</p>
-                            <button className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary ">About us</button>
-                        </div>
+                    <div className="shordy pt-[256px] pb-[128px]">
+                            <div className="mx-auto">
+                                <p className="font-bold text-[36px] lg:text-[60px] text-center mb-[32px]">Want to connect with us further?</p>
+                                <p className="text-center mb-[32px]">Get to know about us. We are a blah blah blah blah blah</p>
+                                <button className="block mx-auto text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary ">About us</button>
+                            </div>
                     </div>
                 </section>
             </div>
