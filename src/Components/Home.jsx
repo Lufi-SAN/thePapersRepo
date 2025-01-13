@@ -319,7 +319,7 @@ function Home() {
                         </div>
                     }
 
-                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
+                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] sm:flex lg:grid lg:grid-cols-[repeat(4,_minmax(0,_1fr))] lg:gap-x-[24px] lg:gap-y-[48px] bg-white">
                         {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image}
                          key={product.id} 
                          classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
