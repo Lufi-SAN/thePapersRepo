@@ -240,14 +240,14 @@ function Home() {
                 <section aria-labelledby="Product List" className="pt-[96px]">
                     <h2 id="Product List" className="text-[30px] font-bold pl-[16px]">Our Products</h2>
                     <div className="flex pt-[8px] text-gray-500 pl-[16px]">
-                        <button aria-controls="filterBoxDiv" onClick={showFilterDiv} className="text-primary text-[18px] font-bold">Filters <span className="align-text-top">&#8964;</span></button>
+                        <button aria-controls="filterBoxDiv" onClick={showFilterDiv} className="text-primary text-[18px] font-bold">Filters <span className="align-text-top material-symbols-outlined"> { isFilterBoxExpanded ? 'arrow_drop_up' : 'arrow_drop_down'} </span></button>
 
                         <ul className="me-0 ms-auto flex divide-x accent-primary" role="Filter Options">
 
                             <li className="relative px-[16px]">
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black "} 
                                 buttonOnClick={showCategoryListHandler} buttonText={"Category"} 
-                                spanClasses={"align-text-top"} spanText={"\u2304"} 
+                                spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.categoryZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`} 
                                 divClasses={`p-[16px] absolute top-[150%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"} border rounded-md`} 
                                 formOnInput={(event) => filterFormInputHandler(event)} formClasses={null}>
                                 <div className="flex item-center mt-[8px]">
@@ -264,7 +264,7 @@ function Home() {
                             <li className="relative px-[16px]">    
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black"} 
                                 buttonOnClick={showPriceListHandler} buttonText={"Price"} 
-                                spanClasses={"align-text-top"} spanText={"\u2304"} 
+                                spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.priceZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`} 
                                 divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.priceZActive ? "z-10" : "hidden"} border rounded-md`} 
                                 formOnInput={null} formClasses={"whitespace-nowrap"}>
                                         <div data-slider-container className="relative pb-[32px]">
@@ -288,7 +288,7 @@ function Home() {
 
                             <li className="relative px-[16px]">
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black"} buttonOnClick={showRatingListHandler}
-                                buttonText={"Rating"} spanClasses={"align-text-top"} spanText={"\u2304"}
+                                buttonText={"Rating"} spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.ratingZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`}
                                 divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}
                                 formOnInput={(event) => filterFormInputHandler(event)} formClasses={"whitespace-nowrap"}>
                                         <div className="flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value4" data-value="4" /><label htmlFor="value4" className="font-semibold ml-[12px] text-[1rem] mr-[16px]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
@@ -301,7 +301,7 @@ function Home() {
 
                             <li className="relative px-[16px]">
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black"} buttonOnClick={showStockListHandler}
-                                buttonText={"Stock"} spanClasses={"align-text-top"} spanText={"\u2304"}
+                                buttonText={"Stock"} spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.stockZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`}
                                 divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}
                                 formOnInput={(event) => filterFormInputHandler(event)} formClasses={"whitespace-nowrap"}>
                                         <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} /><label htmlFor="under250">0-249</label></div>
@@ -329,11 +329,11 @@ function Home() {
                 </section>
 
                 <section aria-label="About page link">
-                    <div className="shordy pt-[256px] pb-[128px]">
+                    <div className="shordy">
                             <div className="mx-auto">
-                                <p className="font-bold text-[36px] lg:text-[60px] text-center mb-[32px]">Want to connect with us further?</p>
+                                <p className="font-bold text-[36px] lg:text-[60px] text-center mb-[32px] pt-[256px]">Want to connect with us further?</p>
                                 <p className="text-center mb-[32px]">Get to know about us. We are a blah blah blah blah blah</p>
-                                <button className="block mx-auto text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary ">About us</button>
+                                <div className="pb-[128px]"><button className="block mx-auto text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary ">About us</button></div>
                             </div>
                     </div>
                 </section>
