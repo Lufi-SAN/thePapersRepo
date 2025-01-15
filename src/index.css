@@ -170,3 +170,11 @@ button:hover {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
+.menuIn {
+  right: 0;
+}
+
+.menuOut {
+  right: -100%;
+}

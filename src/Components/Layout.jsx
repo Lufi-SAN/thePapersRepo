@@ -1,10 +1,14 @@
-import { useState, Suspense } from "react"
+import { useState, Suspense, useRef } from "react"
+import { createPortal } from "react-dom";
 import { Outlet, NavLink, Await, useLoaderData, useLocation } from "react-router-dom"
+import MobileMenu from "./MobileMenu";
 
 function Layout() {
     const componentProductsData = useLoaderData();
     const [cartCounter, setCartCounter] = useState([])
     const location = useLocation();
+    const [menuOpen, setMenuOpen] = useState(false) 
+    const bodyOverflowAffector = useRef(null)
 
     let colors = ["text-primary", "text-white"];
     let textcolor, textcolor2;
@@ -14,12 +18,15 @@ function Layout() {
         [textcolor2, textcolor] = colors
     }
 
+
     return (
         <>
+            <div ref={bodyOverflowAffector}>
             <header className="sticky top-0 z-[555]" role="header">
                 <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center lg:justify-normal">
                     <h1 className={`text-[30px] lg:text-[36px] font-extrabold text-primary font-azeret ${textcolor}`} aria-label="Company Logo">the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
-                    <div className="lg:hidden mr-0"><button><span className="material-symbols-outlined">menu</span></button></div>
+                    <div className="lg:hidden mr-0"><button onClick={() => setMenuOpen(true)}><span className="material-symbols-outlined">menu</span></button></div>
+                    {menuOpen && createPortal(<MobileMenu overlayClickHandler={() => setMenuOpen(false)} bodyAffector={bodyOverflowAffector} />, document.body)}
                     <ul className="me-0 ms-auto text-gray-500 navul hidden lg:flex" role="navigation">
                         <li className="flex items-center"><NavLink to="/">About</NavLink></li>
                         <li className="flex items-center"><NavLink to="/">Home</NavLink></li>
@@ -44,6 +51,7 @@ function Layout() {
                 </Await>
             </Suspense>
             <footer role="footer"></footer>
+            </div>
         </>
     )
 }
