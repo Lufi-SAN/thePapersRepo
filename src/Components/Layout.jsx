@@ -22,7 +22,7 @@ function Layout() {
     return (
         <>
             <div ref={bodyOverflowAffector}>
-            <header className="sticky top-0 z-[555]" role="header">
+            <header className="lg:sticky lg:top-0 z-[555]" role="header">
                 <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center lg:justify-normal">
                     <h1 className={`text-[30px] lg:text-[36px] font-extrabold text-primary font-azeret ${textcolor}`} aria-label="Company Logo">the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
                     <div className="lg:hidden mr-0"><button onClick={() => setMenuOpen(true)}><span className="material-symbols-outlined">menu</span></button></div>
