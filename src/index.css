@@ -178,3 +178,7 @@ button:hover {
 .menuOut {
   right: -100%;
 }
+
+.textShadowOne {
+  text-shadow: 0px 0px 6px black;
+}

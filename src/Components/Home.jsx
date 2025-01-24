@@ -240,9 +240,8 @@ function Home() {
                 </section>
 
                 <section aria-labelledby="Product List" className="pt-[96px]">
-                    <div className="pl-[16px] pr-[16px] flex items-baseline justify-between"><h2 id="Product List" className="text-[24px] md:text-[30px] font-bold">Our Products</h2><div className="text-blue-400 lg:hidden hover:underline"><Link to='/cart'>See All</Link><span class="material-symbols-outlined">
-arrow_forward
-</span></div>
+                    <div className="pl-[16px] pr-[16px] flex items-baseline justify-between"><h2 id="Product List" className="text-[24px] md:text-[30px] font-bold">Our Products</h2><div className="text-primary lg:hidden hover:underline"><Link to='/cart'>See All</Link>
+                    <span className="material-symbols-outlined text-[13.3333px] align-bottom">arrow_forward</span></div>
                     </div>
                     <div className="hidden lg:flex pt-[8px] text-gray-500 pl-[16px]">
                         <button aria-controls="filterBoxDiv" onClick={showFilterDiv} className="text-primary text-[18px] font-bold">Filters <span className="align-text-top material-symbols-outlined"> { isFilterBoxExpanded ? 'arrow_drop_up' : 'arrow_drop_down'} </span></button>
@@ -332,14 +331,14 @@ arrow_forward
                          firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]" }} />)}
                     </div>
 
-                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] flex lg:hidden overflow-x-scroll">
+                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex lg:hidden overflow-x-scroll">
                         {
                             fewerProducts(filteredComponentProductsData).map((product) => <Card title={product.title} image={product.image}
                             key={product.id}
                             classNames={{mainDiv: "group h-[200px] w-[175px] mr-[24px] relative hover:w-[400px] transition-all duration-300", 
-                            mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[175px] group-hover:w-[100%]",
+                            mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[175px] pl-[12px] group-hover:w-[100%] group-hover:whitespace-normal text-[18px] z-[5] text-white textShadowOne",
                             blendDiv: "bg-gray-100 h-[100%] overflow-hidden rounded-[5%]", pictureDiv: "overflow-hidden h-[100%] group-hover:overflow-visible",
-                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%] group-hover:backdrop-blur-xs"
+                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%] group-hover:blur-xs"
                             }}
                             
                             />)
