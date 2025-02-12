@@ -287,10 +287,10 @@ function Home() {
                         {
                             fewerProducts(filteredComponentProductsData).map((product) => <Card title={product.title} image={product.image}
                             key={product.id}
-                            classNames={{mainDiv: "group h-[200px] w-[175px] mr-[24px] relative hover:w-[100vw] transition-all duration-300 snap-center", 
-                            mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[175px] pl-[12px] group-hover:w-[100%] group-hover:whitespace-normal text-[18px] z-[5] text-white textShadowOne",
+                            classNames={{mainDiv: "group h-[200px] w-[175px] mr-[24px] relative hover:w-[10000px] transition-all duration-300 snap-center", 
+                            mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[100%] pl-[12px] group-hover:w-[100%] group-hover:whitespace-normal text-[18px] z-[5] text-white textShadowOne",
                             blendDiv: "bg-gray-100 h-[100%] overflow-hidden rounded-[5%]", pictureDiv: "overflow-hidden h-[100%] group-hover:overflow-visible",
-                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%] "
+                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%]"
                             }}
                             
                             />)
