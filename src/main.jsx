@@ -1,13 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import Layout from './Components/Layout.jsx'
 import { fetchProductsLoader as productLoader } from "./Components/fetchProductsLoader.jsx"
 import Home from './Components/Home.jsx'
 import Cart from './Components/Cart.jsx'
 import ErrorPage from './Components/ErrorPage.jsx'
 import Page404 from './Components/Page404.jsx'
+import MobileGrid from './Components/MobileGrid.jsx'
+import ProductPage from './Components/ProductPage.jsx'
 
 let routes = createBrowserRouter([
   {
@@ -23,6 +25,19 @@ let routes = createBrowserRouter([
       {
         path: "cart",
         element: <Cart />
+      },
+      {
+        path: "products",
+        loader: function () {
+          if(window.innerHeight >= 1024) {
+            return redirect("/")
+          }
+          return null
+        },
+        element: <MobileGrid/>
+      },{
+        path: "product/:productID",
+        element: <ProductPage/>
       }
     ]
   },

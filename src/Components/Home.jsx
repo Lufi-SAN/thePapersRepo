@@ -1,13 +1,21 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useOutletContext, useSearchParams } from "react-router-dom"
 import Card from "./Card"
 import FilterForm from "./FilterForm"
 import fewerProducts from "../Utilities/fewerProducts"
 import { Link } from "react-router-dom";
+import filterFormInputHandler from "../Utilities/filterFormInputHandler";
+import rangeLogicHandler from "../Utilities/rangeLogicHandler";
+import numberInputHandler from "../Utilities/numberInputHandler";
+import applyRangeFilter from "../Utilities/applyRangeFilter";
+import cancelRangeFilter from "../Utilities/cancelRangeFilter";
+import resetButtonHandler from "../Utilities/resetButtonHandler";
+import applyRangeButtonDisplayControls from "../Utilities/applyRangeButtonDisplayControls";
+import { useMediaQuery } from 'react-responsive';
 
 function Home() {
-    console.log("Outlet Context:", useOutletContext());
-    const { componentProductsData, location } = useOutletContext();
+    // console.log("Outlet Context:", useOutletContext());
+    const { cartCounter, setCartCounter, componentProductsData, location } = useOutletContext();
 
     //State to keep filter bar status
     const [isFilterBoxExpanded, setisFilterBoxExpanded] = useState(false)
@@ -15,6 +23,9 @@ function Home() {
     function showFilterDiv() {
         setisFilterBoxExpanded((prev) => !prev)
     }
+    //Getting window height
+    const isMobile = useMediaQuery({ maxWidth: 1023 });
+    const isLaptop = useMediaQuery({ minWidth: 1024 });
     //Config for current filter option form display
     const [zActive, setZActive] = useState({
         categoryZActive: false,
@@ -51,45 +62,22 @@ function Home() {
         toggleZActive("stockZActive");
     }
 
+    const MCRef = useRef(null)
+    const ERef = useRef(null)
+    const JRef = useRef(null)
+    const WCRef = useRef(null)
+    const rating4Ref = useRef(null)
+    const rating3Ref = useRef(null)
+    const rating2Ref = useRef(null)
+    const rating1Ref = useRef(null)
+    const stock3Ref = useRef(null)
+    const stock2Ref = useRef(null)
+    const stock1Ref = useRef(null)
+    
     //Create SP object
     const [filterParameter, setFilterParameter] = useSearchParams();
     //Create new URLSP object with every location change
-    const URLFilterParameter = new URLSearchParams(location.search);
-
-    //General form input handler with input type dependent logic
-    function filterFormInputHandler(event) {
-        event.preventDefault();
-        setFilterParameter((prevFilterParams) => {
-            const typeOfInput = event.target.name;
-            let returnObject = { ...prevFilterParams };
-
-            switch (typeOfInput) {
-                case "category":
-                    if (URLFilterParameter.has(event.target.name, event.target.dataset.value)) {
-                        URLFilterParameter.delete(event.target.name, event.target.dataset.value)
-                    } else {
-                        URLFilterParameter.append(event.target.name, event.target.dataset.value)
-                    }
-                    returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-                    break;
-                case "rating":
-                    URLFilterParameter.delete(event.target.name)
-                    URLFilterParameter.append(event.target.name, `${event.target.dataset.value}-5`)
-                    returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-                    break;
-                case "stock":
-                    URLFilterParameter.delete(event.target.name)
-                    URLFilterParameter.append(event.target.name, `${event.target.dataset.downValue}-${event.target.dataset.upValue}`)
-                    returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-                    break;
-
-            }
-
-            return returnObject
-        })
-
-    }
-
+    // const URLFilterParameter = new URLSearchParams(location.search);
     const sliderOneRef = useRef(null)
     const sliderTwoRef = useRef(null)
     const sliderTrackRef = useRef(null)
@@ -98,85 +86,41 @@ function Home() {
     const applyButtonRef = useRef(null)
     const [priceErrorMessage, setPriceErrorMessage] = useState(false)
 
-    function rangeLogicHandler(id) {
-        applyRangeButtonDisplayControls()
-        const minGap = 0;
-        const sliderOneValue = ((parseInt(sliderOneRef.current.value) / 1000) * 100)
-        const sliderTwoValue = ((parseInt(sliderTwoRef.current.value) / 1000) * 100)
-
-        if (sliderTwoRef.current.value === 0) {
-            sliderTwoRef.current.style.zIndex = 1000;
-        } else {
-            sliderTwoRef.current.style.zIndex = 0;
-        }
-
-        if (id === sliderOneRef.current.name) {
-            if (parseInt(sliderTwoRef.current.value) - parseInt(sliderOneRef.current.value) <= minGap) {
-                sliderOneRef.current.value = parseInt(sliderTwoRef.current.value) - minGap;
+    useEffect(
+        () => {
+            if (MCRef.current) {
+                MCRef.current.checked  = filterParameter.getAll("category").includes("men's clothing");
+                ERef.current.checked  = filterParameter.getAll("category").includes("electronics");
+                JRef.current.checked  = filterParameter.getAll("category").includes("jewelery");
+                WCRef.current.checked  = filterParameter.getAll("category").includes("women's clothing");
+                sliderOneRef.current.value = minNumberRef.current.value = filterParameter.get("price") == null ? '0' : filterParameter.get("price").split("-")[0]
+                sliderTwoRef.current.value =  maxNumberRef.current.value = filterParameter.get("price") == null ? '1000' : filterParameter.get("price").split("-")[1]
+                sliderTrackRef.current.style.background = 
+                `linear-gradient(to right, #e5e7eb ${(sliderOneRef.current.value/1000) * 100}%, 
+              #8b5cf6 ${(sliderOneRef.current.value/1000) * 100}% ${(sliderTwoRef.current.value/1000) * 100}%, #e5e7eb ${(sliderTwoRef.current.value/1000) * 100}%)`
+                switch(filterParameter.get("rating")) { 
+                    case "4-5":
+                        rating4Ref.current.checked = true
+                        break;
+                    case "3-5":
+                        rating3Ref.current.checked = true
+                        break;
+                    case "2-5":
+                        rating2Ref.current.checked = true
+                        break;
+                    case "1-5":
+                        rating1Ref.current.checked = true
+                        break;
+                    default:
+                        break;
+                }
+                 
             }
-        } else {
-            if (parseInt(sliderTwoRef.current.value) - parseInt(sliderOneRef.current.value) <= minGap) {
-                sliderTwoRef.current.value = parseInt(sliderOneRef.current.value) + minGap;
-            }
-        }
-
-        minNumberRef.current.value = sliderOneRef.current.value;
-        maxNumberRef.current.value = sliderTwoRef.current.value;
-        sliderTrackRef.current.style.background = `linear-gradient(to right, #e5e7eb ${sliderOneValue}%, #8b5cf6 ${sliderOneValue}% ${sliderTwoValue}%, #e5e7eb ${sliderTwoValue}%)`
-    }
-
-    function numberInputHandler(value, inputID) {
-        applyRangeButtonDisplayControls()
-        if (!minNumberRef.current.value || !maxNumberRef.current.value) {
-            applyButtonRef.current.disabled = true
-            applyButtonRef.current.classList.add("greyscaleapplybutton")
-            setPriceErrorMessage(true)
-        }
-        const min = 0;
-
-        if (inputID === "Min") {
-            if (value >= maxNumberRef.current.value) {
-                minNumberRef.current.value = Number(maxNumberRef.current.value) - min
-            }
-        } else if (inputID === "Max") {
-            if (value <= minNumberRef.current.value) {
-                maxNumberRef.current.value = Number(minNumberRef.current.value) + min
-            }
-        }
-    }
-
-    function applyRangeFilter() {
-        const newParams = new URLSearchParams(location.search)
-        newParams.set('price', `${minNumberRef.current.value}-${maxNumberRef.current.value}`)
-        setFilterParameter(newParams);
-    }
-
-    function cancelRangeFilter() {
-        const newParams = new URLSearchParams(location.search)
-        newParams.delete("price");
-        setFilterParameter(newParams)//I ended up with ?price = undefined in URL so I like it better this way
-        minNumberRef.current.value = 0
-        maxNumberRef.current.value = 1000
-        sliderOneRef.current.value = 0
-        sliderTwoRef.current.value = 1000
-        sliderTrackRef.current.style.background = '#8b5cf6';
-    }
-
-    function applyRangeButtonDisplayControls() {
-        applyButtonRef.current.disabled = false
-        applyButtonRef.current.classList.remove("greyscaleapplybutton")
-        setPriceErrorMessage(false)
-    }
-
-    function resetButtonHandler(type) {
-        setFilterParameter((prevFilterParams) => {
-            let returnObject;
-            URLFilterParameter.delete(type)
-            returnObject = Object.assign(URLFilterParameter, prevFilterParams)
-            return returnObject
-        })
-    }
-
+        }, [filterParameter]
+    )
+    console.log(`MainState: ${filterParameter}`)
+    //General form input handler with input type dependent logic
+    
     //Filter config 
     const filters = {
         category: filterParameter.getAll("category"),
@@ -189,14 +133,13 @@ function Home() {
     // Above was my method for chnaging the 4-5/2-3/etc. to a sorted array with no repeated numbers. I'm keeping it in here cause its cool 
     // This was the filter config: const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
 
-
     //Function to filter the products array according to filter config 
     const filterProducts = (products, filters) => {
         return products.filter(product => {
             const matchesCategory = filters.category.length !== 0 ? filters.category.includes(product.category) : true;
             const matchesPrice = filters.price.length !== 0 ? filters.price[0] <= product.price && product.price <= filters.price[1] : true;
             const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate && product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
-            const matchesStock = filters.stock.length !== 0 ? filters.stock[0] <= product.rating.stock && product.rating.stock <= filters.stock[1] : true;
+            const matchesStock = filters.stock.length !== 0 ? filters.stock[0] <= product.rating.count && product.rating.count <= filters.stock[1] : true;
 
             return matchesCategory && matchesPrice && matchesRating && matchesStock;
         })
@@ -253,15 +196,23 @@ function Home() {
                                 buttonOnClick={showCategoryListHandler} buttonText={"Category"} 
                                 spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.categoryZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`} 
                                 divClasses={`p-[16px] absolute top-[150%] bg-white ${zActive.categoryZActive ? "z-10" : "hidden"} border rounded-md`} 
-                                formOnInput={(event) => filterFormInputHandler(event)} formClasses={null}>
-                                <div className="flex item-center mt-[8px]">
-                                            <input type="checkbox" name="category" id="mensClothing" 
-                                            data-value="men's clothing" className="h-[1rem] aspect-square" />
-                                            <label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">
-                                            men&apos;s clothing</label></div>
-                                        <div className="flex item-center mt-[24px]"><input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" /><label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">electronics</label></div>
-                                        <div className="flex item-center mt-[24px]"><input type="checkbox" name="category" id="jewelry" data-value="jewelery" className="h-[1rem] aspect-square" /><label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">jewelery</label></div>
-                                        <div className="flex item-center mt-[24px] mb-[8px]"><input type="checkbox" name="category" id="womensClothing" data-value="women's clothing" className="h-[1rem] aspect-square" /><label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label></div>
+                                formOnInput={(event) => filterFormInputHandler(event, location, setFilterParameter)} formClasses={null}>
+                                    <div className="flex item-center mt-[8px]">
+                                            <input type="checkbox" name="category" id="mensClothing" data-value="men's clothing" className="h-[1rem] aspect-square" ref={MCRef}/>
+                                            <label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">men&apos;s clothing</label>
+                                            </div>
+                                    <div className="flex item-center mt-[24px]">
+                                            <input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" ref={ERef}/>
+                                            <label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">electronics</label>
+                                            </div>
+                                    <div className="flex item-center mt-[24px]">
+                                            <input type="checkbox" name="category" id="jewelry" data-value="jewelery" className="h-[1rem] aspect-square" ref={JRef}/>
+                                            <label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">jewelery</label>
+                                            </div>
+                                    <div className="flex item-center mt-[24px] mb-[8px]">
+                                            <input type="checkbox" name="category" id="womensClothing" data-value="women's clothing" className="h-[1rem] aspect-square" ref={WCRef}/>
+                                            <label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label>
+                                            </div>
                                 </FilterForm>
                             </li>
 
@@ -273,18 +224,18 @@ function Home() {
                                 formOnInput={null} formClasses={"whitespace-nowrap"}>
                                         <div data-slider-container className="relative pb-[32px]">
                                             <div data-slider-track className="w-full h-[5px] absolute m-auto top-0 bottom-0 rounded-[5px] bg-primary" ref={sliderTrackRef}></div>
-                                            <input type="range" min="0" max="1000" defaultValue={0} name="priceMinSlider" ref={sliderOneRef} onChange={() => { rangeLogicHandler("priceMinSlider") }} className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none z-10`} />
-                                            <input type="range" min="0" max="1000" defaultValue={1000} name="priceMaxSlider" ref={sliderTwoRef} onChange={() => { rangeLogicHandler("priceMaxSlider") }} className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none`} />
+                                            <input type="range" min="0" max="1000" defaultValue={0} name="priceMinSlider" ref={sliderOneRef} onChange={() => rangeLogicHandler("priceMinSlider" , sliderOneRef, sliderTwoRef, minNumberRef, maxNumberRef, sliderTrackRef, applyRangeButtonDisplayControls, applyButtonRef, setPriceErrorMessage) } className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none z-10`} />
+                                            <input type="range" min="0" max="1000" defaultValue={1000} name="priceMaxSlider" ref={sliderTwoRef} onChange={() => rangeLogicHandler("priceMaxSlider", sliderOneRef, sliderTwoRef, minNumberRef, maxNumberRef, sliderTrackRef, applyRangeButtonDisplayControls, applyButtonRef, setPriceErrorMessage) } className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none`} />
                                         </div>
 
                                         <div data-numberinputforslider className="flex mt-[16px] ">
-                                            <input type="number" defaultValue={0} min={0} max={1000} placeholder="Min" ref={minNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Min")} className="border border-gray-300 rounded p-[8px]" />
+                                            <input type="number" defaultValue={0} min={0} max={1000} placeholder="Min" ref={minNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Min", applyRangeButtonDisplayControls, minNumberRef, maxNumberRef, applyButtonRef, setPriceErrorMessage)} className="border border-gray-300 rounded p-[8px]" />
                                             <div className="px-[8px] flex justify-center items-center">&ndash;</div>
-                                            <input type="number" defaultValue={1000} min={0} max={1000} placeholder="Max" ref={maxNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Max")} className="border border-gray-300 rounded p-[8px]" />
+                                            <input type="number" defaultValue={1000} min={0} max={1000} placeholder="Max" ref={maxNumberRef} onChange={(event) => numberInputHandler(Number(event.target.value), "Max", applyRangeButtonDisplayControls, minNumberRef, maxNumberRef, applyButtonRef, setPriceErrorMessage)} className="border border-gray-300 rounded p-[8px]" />
                                         </div>
                                         <div className="mt-[24px]">
-                                            <button type="button" onClick={applyRangeFilter} className="mr-[32px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" ref={applyButtonRef}>Apply</button>
-                                            <button type="button" onClick={cancelRangeFilter} className="font-semibold">Cancel</button>
+                                            <button type="button" onClick={() => applyRangeFilter(location, minNumberRef, maxNumberRef, setFilterParameter)} className="mr-[32px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" ref={applyButtonRef}>Apply</button>
+                                            <button type="button" onClick={() => cancelRangeFilter(location, setFilterParameter, minNumberRef, maxNumberRef, sliderOneRef, sliderTwoRef, sliderTrackRef)} className="font-semibold">Cancel</button>
                                             {priceErrorMessage && <p className="text-red-500 font-semibold mt-[8px] whitespace-normal leading-[1.5]">PLease input a numeric value between the range of 0 to 1000</p>}
                                         </div>
                                 </FilterForm>
@@ -294,12 +245,12 @@ function Home() {
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black"} buttonOnClick={showRatingListHandler}
                                 buttonText={"Rating"} spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.ratingZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`}
                                 divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.ratingZActive ? "z-10" : "hidden"} border rounded-md`}
-                                formOnInput={(event) => filterFormInputHandler(event)} formClasses={"whitespace-nowrap"}>
-                                        <div className="flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value4" data-value="4" /><label htmlFor="value4" className="font-semibold ml-[12px] text-[1rem] mr-[16px]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value3" data-value="3" /><label htmlFor="value3" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value2" data-value="2" /><label htmlFor="value2" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value1" data-value="1" /><label htmlFor="value1" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
-                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => resetButtonHandler("rating")}>Reset</button>
+                                formOnInput={(event) => filterFormInputHandler(event, location, setFilterParameter)} formClasses={"whitespace-nowrap"}>
+                                        <div className="flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value4" data-value="4" ref={rating4Ref}/><label htmlFor="value4" className="font-semibold ml-[12px] text-[1rem] mr-[16px]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value3" data-value="3" ref={rating3Ref}/><label htmlFor="value3" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value2" data-value="2" ref={rating2Ref}/><label htmlFor="value2" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" id="value1" data-value="1" ref={rating1Ref}/><label htmlFor="value1" className="font-semibold ml-[12px] text-[1rem]"><span className="material-symbols-outlined align-text-bottom">grade</span><span> & above</span></label></div>
+                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => resetButtonHandler("rating", location, setFilterParameter)}>Reset</button>
                                 </FilterForm>
                             </li>
 
@@ -307,11 +258,11 @@ function Home() {
                                 <FilterForm buttonClasses={"text-[18px] font-bold hover:text-black"} buttonOnClick={showStockListHandler}
                                 buttonText={"Stock"} spanClasses={"align-text-top material-symbols-outlined"} spanText={`${ zActive.stockZActive ? 'arrow_drop_up' : 'arrow_drop_down'}`}
                                 divClasses={`p-[16px] absolute top-[150%] -left-[16px] bg-white ${zActive.stockZActive ? "z-10" : "hidden"} border rounded-md`}
-                                formOnInput={(event) => filterFormInputHandler(event)} formClasses={"whitespace-nowrap"}>
-                                        <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} /><label htmlFor="under250">0-249</label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="under500" data-down-value={250} data-up-value={499} /><label htmlFor="under500">250-499</label></div>
-                                        <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="toInfinity" data-down-value={500} data-up-value="Infinity" /><label htmlFor="toInfinity">500+</label></div>
-                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => resetButtonHandler("stock")}>Reset</button>
+                                formOnInput={(event) => filterFormInputHandler(event, location, setFilterParameter)} formClasses={"whitespace-nowrap"}>
+                                        <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} ref={stock3Ref}/><label htmlFor="under250">0-249</label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="under500" data-down-value={250} data-up-value={499} ref={stock2Ref}/><label htmlFor="under500">250-499</label></div>
+                                        <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="toInfinity" data-down-value={500} data-up-value="Infinity" ref={stock1Ref}/><label htmlFor="toInfinity">500+</label></div>
+                                        <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => resetButtonHandler("stock", location, setFilterParameter)}>Reset</button>
                                 </FilterForm>
                             </li>
                         </ul>
@@ -323,28 +274,30 @@ function Home() {
                         </div>
                     }
 
-                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] hidden lg:grid lg:grid-cols-[repeat(4,_minmax(0,_1fr))] lg:gap-x-[24px] lg:gap-y-[48px] bg-white">
-                        {filteredComponentProductsData.map((product) => <Card category={product.category} title={product.title} price={product.price} image={product.image}
+                    {  isLaptop  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] hidden lg:grid lg:grid-cols-[repeat(4,_minmax(0,_1fr))] lg:gap-x-[24px] lg:gap-y-[48px] bg-white">
+                        {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`}><Card category={product.category} title={product.title} price={product.price} image={product.image}
                          key={product.id} 
                          classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
                          pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", 
-                         firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]" }} />)}
-                    </div>
+                         firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]" }} /></Link>)}
+                        </div>
+                    }
 
-                    <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex lg:hidden overflow-x-scroll">
+                    {  isMobile  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex lg:hidden overflow-x-scroll snap-x">
                         {
                             fewerProducts(filteredComponentProductsData).map((product) => <Card title={product.title} image={product.image}
                             key={product.id}
-                            classNames={{mainDiv: "group h-[200px] w-[175px] mr-[24px] relative hover:w-[400px] transition-all duration-300", 
+                            classNames={{mainDiv: "group h-[200px] w-[175px] mr-[24px] relative hover:w-[100vw] transition-all duration-300 snap-center", 
                             mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[175px] pl-[12px] group-hover:w-[100%] group-hover:whitespace-normal text-[18px] z-[5] text-white textShadowOne",
                             blendDiv: "bg-gray-100 h-[100%] overflow-hidden rounded-[5%]", pictureDiv: "overflow-hidden h-[100%] group-hover:overflow-visible",
-                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%] group-hover:blur-xs"
+                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%] "
                             }}
                             
                             />)
                             // style={{ backgroundImage: `url(${product.image})` }} bg-contain bg-no-repeat bg-center
                         }
-                    </div>
+                        </div>
+                    }
                 </section>
 
                 <section aria-label="About page link">
