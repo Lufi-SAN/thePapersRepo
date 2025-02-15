@@ -1,0 +1,53 @@
+.gridParent {
+	position: fixed; 
+	top:  calc(calc(100vh - 228.335px)/2); 
+	left: var(--left, calc(calc(100vw - 500px)/2)); 
+	display: grid;
+	grid-template-columns: var(--g-tc, repeat(5, 100px));
+	grid-template-rows: 50px;
+	grid-auto-rows: 50px;
+	grid-template-areas: '. a a a a' 'b b b . .' '. . c c c' '. . d . .';
+}
+ 
+.gridParent > * {
+	background-color: blueviolet;
+}
+
+.one {
+	grid-area: a;
+	animation: 1.5s ease-in-out 0s infinite gridPulse;
+}
+
+.two {
+	grid-area: b;
+	animation: 1.5s ease-in-out 0s infinite gridPulse;
+	margin-top: 6.665px
+}
+
+.three {
+	grid-area: c;
+	animation: 1.5s ease-in-out 0s infinite gridPulse;
+	margin-top: 8.335px;
+	
+}
+
+.four {
+	grid-area: d;
+	animation: 1.5s ease-in-out 0s infinite gridPulse;
+	margin-top: 13.335px;
+}
+
+@keyframes gridPulse {
+	from {
+		opacity: 0.6;
+	} to {
+		opacity: 0;
+	}
+}
+
+@media (max-width: 1023px) {
+	:root {
+		--left: calc(calc(100vw - 250px)/2);
+		--g-tc: repeat(5, 50px);
+	}
+}
