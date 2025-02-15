@@ -183,7 +183,7 @@ function Home() {
                 </section>
 
                 <section aria-labelledby="Product List" className="pt-[96px]">
-                    <div className="pl-[16px] pr-[16px] flex items-baseline justify-between"><h2 id="Product List" className="text-[24px] md:text-[30px] font-bold">Our Products</h2><div className="text-primary lg:hidden hover:underline"><Link to='/cart'>See All</Link>
+                    <div className="pl-[16px] pr-[16px] flex items-baseline justify-between"><h2 id="Product List" className="text-[24px] md:text-[30px] font-bold">Our Products</h2><div className="text-primary lg:hidden hover:underline"><Link to='/products'>See All</Link>
                     <span className="material-symbols-outlined text-[13.3333px] align-bottom">arrow_forward</span></div>
                     </div>
                     <div className="hidden lg:flex pt-[8px] text-gray-500 pl-[16px]">
@@ -274,23 +274,22 @@ function Home() {
                         </div>
                     }
 
-                    {  isLaptop  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] hidden lg:grid lg:grid-cols-[repeat(4,_minmax(0,_1fr))] lg:gap-x-[24px] lg:gap-y-[48px] bg-white">
-                        {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`}><Card category={product.category} title={product.title} price={product.price} image={product.image}
-                         key={product.id} 
+                    {  isLaptop  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
+                        {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`} key={product.id}><Card category={product.category} title={product.title} price={product.price} image={product.image} 
                          classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
                          pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", 
-                         firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]" }} /></Link>)}
+                         firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]", mobileText: "hidden" }} /></Link>)}
                         </div>
                     }
 
-                    {  isMobile  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex lg:hidden overflow-x-scroll snap-x">
+                    {  isMobile  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex overflow-x-scroll snap-x">
                         {
                             fewerProducts(filteredComponentProductsData).map((product) => <Card title={product.title} image={product.image}
                             key={product.id}
-                            classNames={{mainDiv: "group h-[200px] w-[175px] mr-[24px] relative hover:w-[10000px] transition-all duration-300 snap-center", 
+                            classNames={{mainDiv: "group h-[200px] min-w-[175px] mr-[24px] relative hover:min-w-[75vw] transition-all duration-300 snap-center", 
                             mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[100%] pl-[12px] group-hover:w-[100%] group-hover:whitespace-normal text-[18px] z-[5] text-white textShadowOne",
                             blendDiv: "bg-gray-100 h-[100%] overflow-hidden rounded-[5%]", pictureDiv: "overflow-hidden h-[100%] group-hover:overflow-visible",
-                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%]"
+                            picture: "w-[100%] object-contain mix-blend-multiply h-[100%]", firstP: "hidden", secondP: "hidden", thirdP: "hidden"
                             }}
                             
                             />)
