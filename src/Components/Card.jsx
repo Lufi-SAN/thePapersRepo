@@ -5,7 +5,7 @@ export default function Card({ category = null, title = null, price = null, imag
         <div className={`${classNames.mainDiv}`} style={style}>
             {/* <div className={classNames.pictureDiv} style={{ backgroundImage: `url(${classNames.picture})` }}></div> */}
             <p className={`${classNames.mobileText}`}>{title}</p>
-            <div className={`${classNames.blendDiv}`} ><div className={classNames.pictureDiv}><img src={image} alt="Product image" className={classNames.picture} /></div></div>
+            <div className={`${classNames.blendDiv}`} ><div className={classNames.pictureDiv}><img src={image} alt="Product image" className={classNames.picture} width={663} height={879}/></div></div>
             <p className={`${classNames.firstP}`} >{category}</p>
             <p className={`${classNames.secondP}`}>{title}</p>
             <p className={`${classNames.thirdP}`}>{price}</p>   

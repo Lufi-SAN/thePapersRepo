@@ -35,7 +35,8 @@ let routes = createBrowserRouter([
           return null
         },
         element: <MobileGrid/>
-      },{
+      },
+      {
         path: "product/:productID",
         element: <ProductPage/>
       }
