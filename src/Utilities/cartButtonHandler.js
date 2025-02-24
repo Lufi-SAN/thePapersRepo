@@ -1,4 +1,4 @@
-export default function cartButtonHandler(id,action) {
+export default function cartButtonHandler(id,action,setCartCounter) {
     setCartCounter(
         (prev) => {
                     const cartArray = [...prev];
