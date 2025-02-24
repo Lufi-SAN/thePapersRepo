@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react"
 
-export default function MobileMenu({overlayClickHandler, bodyAffector }) {
+export default function MobileMenu({ overlayClickHandler, bodyAffector }) {
     const menuRef = useRef(null)
     
     // if (isMenuOpen) {
@@ -26,9 +26,6 @@ export default function MobileMenu({overlayClickHandler, bodyAffector }) {
             }
         }, []
     )
-
-    
-
 
     return <>
         <div className="bg-black/[.6] h-[100%] w-[100%] z-[1000] fixed top-0" onClick={() => { menuRef.current.classList.remove("menuIn"); menuRef.current.classList.add("menuOut"); setTimeout(overlayClickHandler, 300)}} >

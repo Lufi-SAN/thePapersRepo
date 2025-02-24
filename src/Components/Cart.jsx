@@ -4,7 +4,12 @@ import cartButtonHandler from "../Utilities/cartButtonHandler"
 function Cart() {
     let {cartCounter, setCartCounter, componentProductsData} = useOutletContext()
     console.log(cartCounter)
-    return <div>{cartCounter.length}</div>
+    return <>
+        <div>
+            {cartCounter.length}
+        </div>
+    </>
+    
 }
 
 export default Cart

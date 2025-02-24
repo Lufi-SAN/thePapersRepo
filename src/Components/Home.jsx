@@ -15,7 +15,7 @@ import { useMediaQuery } from 'react-responsive';
 
 function Home() {
     // console.log("Outlet Context:", useOutletContext());
-    const { cartCounter, setCartCounter, componentProductsData, location } = useOutletContext();
+    const { componentProductsData, location } = useOutletContext();
 
     //State to keep filter bar status
     const [isFilterBoxExpanded, setisFilterBoxExpanded] = useState(false)
@@ -177,7 +177,8 @@ function Home() {
                         </div>
 
                         <div>
-                            <img src="/TheOneRing_1280.jpg" alt="A ring of great power" srcSet="/TheOneRing_500.jpg 500w, /TheOneRing_768.jpg 768w, /TheOneRing_1280.jpg 1280w" className="w-[100%] aspect-[0.67] object-cover " />
+                            <img src="/TheOneRing_1280.jpg" alt="A ring of great power" srcSet="/TheOneRing_500.jpg 500w, /TheOneRing_768.jpg 768w, /TheOneRing_1280.jpg 1280w" className="w-[100%] aspect-[0.67] object-cover " width="1280" 
+                            height="854"/>
                         </div>
                     </div>
                 </section>
