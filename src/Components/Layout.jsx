@@ -38,12 +38,11 @@ function Layout() {
             <header className="sticky top-0 z-[555]" role="header">
                 {fullNav && <FullNav textcolor={textcolor} textcolor2={textcolor2} isMobile={isMobile} setMenuOpen={setMenuOpen} menuOpen={menuOpen} isLaptop={isLaptop}  
                 bodyOverflowAffector={bodyOverflowAffector} cartCounter={cartCounter}/> }
-                {reducedNav && <ReducedNav filterPortalSetter={setFilterPortal}/>}
+            {reducedNav && <ReducedNav location={location} filterPortalSetter={setFilterPortal}/>}
             </header>
             <Suspense fallback={<LoadingPage />}>
                 <Await resolve={componentProductsData.productsData}>
                     {(componentProductsData) => {
-                        console.log(componentProductsData);
                         return (
                             <main>
                                 <Outlet context={{ cartCounter, setCartCounter, componentProductsData, location, bodyOverflowAffector, filterPortal, setFilterPortal }} />
@@ -79,11 +78,14 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
     )
 }
 
-function ReducedNav({filterPortalSetter}) {
+function ReducedNav({ location, filterPortalSetter }) {
+    const prevParams = location.state?.prevParams || ""    
+    console.log(prevParams)
+    
     return(
     <>
     <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center">
-                    <Link to={'..'} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
+                    <Link to={`..${prevParams}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
                     <button onClick={() => filterPortalSetter((prev) => !prev)} className={`${ location.pathname.startsWith("/products") ? 'block' : 'hidden'}`}><span className="material-symbols-outlined">filter_alt</span></button>
     </nav>
     </>

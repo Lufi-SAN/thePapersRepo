@@ -14,7 +14,6 @@ import applyRangeButtonDisplayControls from "../Utilities/applyRangeButtonDispla
 import { useMediaQuery } from 'react-responsive';
 
 function Home() {
-    // console.log("Outlet Context:", useOutletContext());
     const { componentProductsData, location } = useOutletContext();
 
     //State to keep filter bar status
@@ -118,8 +117,6 @@ function Home() {
             }
         }, [filterParameter]
     )
-    console.log(`MainState: ${filterParameter}`)
-    //General form input handler with input type dependent logic
     
     //Filter config 
     const filters = {
@@ -201,19 +198,19 @@ function Home() {
                                     <div className="flex item-center mt-[8px]">
                                             <input type="checkbox" name="category" id="mensClothing" data-value="men's clothing" className="h-[1rem] aspect-square" ref={MCRef}/>
                                             <label htmlFor="mensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">men&apos;s clothing</label>
-                                            </div>
+                                    </div>
                                     <div className="flex item-center mt-[24px]">
                                             <input type="checkbox" name="category" id="electronics" data-value="electronics" className="h-[1rem] aspect-square" ref={ERef}/>
                                             <label htmlFor="electronics" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">electronics</label>
-                                            </div>
+                                    </div>
                                     <div className="flex item-center mt-[24px]">
                                             <input type="checkbox" name="category" id="jewelry" data-value="jewelery" className="h-[1rem] aspect-square" ref={JRef}/>
                                             <label htmlFor="jewelry" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">jewelery</label>
-                                            </div>
+                                    </div>
                                     <div className="flex item-center mt-[24px] mb-[8px]">
                                             <input type="checkbox" name="category" id="womensClothing" data-value="women's clothing" className="h-[1rem] aspect-square" ref={WCRef}/>
                                             <label htmlFor="womensClothing" className="ml-[12px] pr-[24px] align-text-top whitespace-nowrap font-semibold">women&apos;s clothing</label>
-                                            </div>
+                                    </div>
                                 </FilterForm>
                             </li>
 
@@ -276,7 +273,7 @@ function Home() {
                     }
 
                     {  isLaptop  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
-                        {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`} key={product.id}><Card category={product.category} title={product.title} price={product.price} image={product.image} 
+                        {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`} state={{ prevParams: location.search }} key={product.id}><Card category={product.category} title={product.title} price={product.price} image={product.image} 
                          classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
                          pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", 
                          firstP: "text-gray-400 mt-[24px] mb-[4px] capitalize", secondP:"font-semibold mb-[7px]", thirdP: "mb-[4px]", mobileText: "hidden" }} /></Link>)}

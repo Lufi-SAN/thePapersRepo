@@ -8,7 +8,7 @@ export default function ProductPage() {
     const index = productID - 1
     const checkProductExistence = cartCounter.find((item) => item?.ID === productID);
     const productQuantity = checkProductExistence ? checkProductExistence.quantity : 0;
-    console.log(`cart:${cartCounter[productID]?.ID},${cartCounter[productID]?.quantity} &&& quantity: ${checkProductExistence?.quantity}`)
+    // console.log(`cart:${cartCounter[productID]?.ID},${cartCounter[productID]?.quantity} &&& quantity: ${checkProductExistence?.quantity}`)
     
     useEffect(
         () => {
