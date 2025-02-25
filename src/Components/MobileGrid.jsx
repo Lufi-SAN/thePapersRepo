@@ -25,7 +25,7 @@ export default function MobileGrid() {
         return products.filter(product => {
             const matchesCategory = filters.category.length !== 0 ? filters.category.includes(product.category) : true;
             const matchesPrice = filters.price.length !== 0 ? filters.price[0] <= product.price && product.price <= filters.price[1] : true;
-            // const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate && product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
+            const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate && product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
             // const matchesStock = filters.stock.length !== 0 ? filters.stock[0] <= product.rating.count && product.rating.count <= filters.stock[1] : true;
             //   && matchesStock
             return matchesCategory && matchesPrice && matchesRating;
