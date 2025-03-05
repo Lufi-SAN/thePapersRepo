@@ -9,6 +9,7 @@ import cancelRangeFilter from "../Utilities/cancelRangeFilter";
 import numberInputHandler from "../Utilities/numberInputHandler";
 import resetButtonHandler from "../Utilities/resetButtonHandler";
 import { useRef, useEffect, useState } from "react";
+import scrollIntoViewHandler from "../Utilities/scrollIntoViewHandler";
 
 export default function MobileGrid() {
     const { componentProductsData, filterPortal, bodyOverflowAffector, setFilterPortal, location } = useOutletContext();
@@ -18,7 +19,7 @@ export default function MobileGrid() {
         category: filterParameter.getAll("category"),
         price: filterParameter.get("price")?.split('-') || [],
         rating: filterParameter.get("rating")?.split('-') || [],
-        // stock: filterParameter.get("stock") ? filterParameter.get("stock").split("-").map((item) => Number(item)) : []
+        stock: filterParameter.get("stock") ? filterParameter.get("stock").split("-").map((item) => Number(item)) : []
     }
 
     const filterProducts = (products, filters) => {
@@ -26,9 +27,8 @@ export default function MobileGrid() {
             const matchesCategory = filters.category.length !== 0 ? filters.category.includes(product.category) : true;
             const matchesPrice = filters.price.length !== 0 ? filters.price[0] <= product.price && product.price <= filters.price[1] : true;
             const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate && product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
-            // const matchesStock = filters.stock.length !== 0 ? filters.stock[0] <= product.rating.count && product.rating.count <= filters.stock[1] : true;
-            //   && matchesStock
-            return matchesCategory && matchesPrice && matchesRating;
+            const matchesStock = filters.stock.length !== 0 ? filters.stock[0] <= product.rating.count && product.rating.count <= filters.stock[1] : true;
+            return matchesCategory && matchesPrice && matchesRating && matchesStock;
         })
     }
 
@@ -40,7 +40,7 @@ export default function MobileGrid() {
         {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`} key={product.id}><Card category={product.category} title={product.title} price={product.price} image={product.image}
                                  classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
                                  pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", 
-                                 firstP: "hidden", secondP:"mt-[8px] font-semibold mb-[7px]  max-h-[80px] min-h-[80px] overflow-hidden text-ellipsis ", thirdP: "mb-[4px]", mobileText: "hidden" }} /></Link>)}
+                                 firstP: "hidden", secondP:"mt-[8px] font-semibold mb-[7px]  max-h-[3em] min-h-[3em] overflow-hidden text-ellipsis ", thirdP: "mb-[4px]", mobileText: "hidden" }} /></Link>)}
     </div>
     { filterPortal && 
     createPortal(<MGFilterCompnt bodyOverflowAffector={bodyOverflowAffector} 
@@ -125,22 +125,17 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
         }, [filterParameter]
     )
 
-    function scrollIntoViewHandler(elementRef) {
-        if(elementRef.current) {
-            elementRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" })
-        }
-    }
-
     return (
         <div className="bg-black/[.6] h-[100%] w-[100%] z-[1000] fixed top-0" onClick={() => { menuGridRef.current.classList.remove("menuGridIn"); menuGridRef.current.classList.add("menuGridOut"); setTimeout(overlayClickHandler, 300)}} >
-            <div onClick={(event) => event.stopPropagation()} className={`bg-white mx-[30px] fixed bottom-0 menuGridOut transition-[bottom] duration-[0.3s] ease-linear `} ref={menuGridRef}>
-                <ul className="flex justify-between m-[10px] p-[10px]">
-                    <li><button onClick={() => scrollIntoViewHandler(firstDiv)}>Category</button></li>
+            <div onClick={(event) => event.stopPropagation()} className={`bg-white fixed bottom-0 menuGridOut transition-[bottom] duration-[0.3s] ease-linear w-[100vw] rounded-2xl`} ref={menuGridRef}>
+                <ul className="flex max-w-[100%] min-w-[100%] justify-around pb-[1em] pt-[0.5em]">
+                    <li className="underline"><button onClick={() => scrollIntoViewHandler(firstDiv)}>Category</button></li>
                     <li><button onClick={() => scrollIntoViewHandler(secondDiv)}>Price</button></li>
                     <li><button onClick={() => scrollIntoViewHandler(thirdDiv)}>Rating</button></li>
                     <li><button onClick={() => scrollIntoViewHandler(fourthDiv)}>Stock</button></li>
                 </ul>
-                <div className="flex overflow-scroll bg-[green] snap-x snap-mandatory" >
+                
+                <div className="flex overflow-scroll bg-[green] snap-x snap-mandatory pt-[1em] bg-[inherit]" >
                     <div className="min-w-[100%] snap-start snap-always" ref={firstDiv}>
                         <form onInput={(event) => filterFormInputHandler(event, location, setFilterParameter)}>
                         <div className="flex item-center mt-[8px]">
@@ -164,18 +159,21 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
                     {/* price */}
                     <div className="min-w-[100%] snap-start snap-always bg-[purple]" ref={secondDiv}>
                         <form className="whitespace-nowrap">
-                            <div data-slider-container className="relative pb-[32px]">
-                                <div data-slider-track className="w-full h-[5px] absolute m-auto top-0 bottom-0 rounded-[5px] bg-primary" ref={sliderTrackRef}></div>
+                            <div data-slider-container className="relative pb-[52px] bg-[red] touch-none" style={{ touchAction: "none" }} > 
+                                <div data-slider-track className="w-full h-[5px] absolute m-auto top-0 bottom-0 rounded-[5px] bg-primary" ref={sliderTrackRef} 
+                                ></div>
                                 
                                 <input type="range" min="0" max="1000" defaultValue={0} name="priceMinSlider" ref={sliderOneRef} 
                                 onChange={(event) => { event.stopPropagation(); rangeLogicHandler("priceMinSlider" , sliderOneRef, sliderTwoRef, minNumberRef, maxNumberRef, 
-                                sliderTrackRef, applyRangeButtonDisplayControls, applyButtonRef, setPriceErrorMessage)} } 
-                                className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none z-10`} />
+                                sliderTrackRef, applyRangeButtonDisplayControls, applyButtonRef, setPriceErrorMessage)} }
+                                className={`range-custom w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none z-10`} 
+                                />
                                 
                                 <input type="range" min="0" max="1000" defaultValue={1000} name="priceMaxSlider" ref={sliderTwoRef} 
                                 onChange={(event) => { event.stopPropagation(); rangeLogicHandler("priceMaxSlider", sliderOneRef, sliderTwoRef, minNumberRef, maxNumberRef, 
-                                sliderTrackRef, applyRangeButtonDisplayControls, applyButtonRef, setPriceErrorMessage)} } className={`range-custom 
-                                w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none`} />
+                                sliderTrackRef, applyRangeButtonDisplayControls, applyButtonRef, setPriceErrorMessage)} }  className={`range-custom 
+                                w-full outline-none absolute m-auto top-0 bottom-0 bg-transparent pointer-events-none`} 
+                                />
                             </div>
                             
                             <div data-numberinputforslider className="flex mt-[16px] ">
@@ -230,10 +228,19 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
                     </div>
                     {/* stock */}
                     <div className="min-w-[100%] snap-start snap-always bg-[blue]" ref={fourthDiv}>
-                        <form ></form>
+                        <form onInput={(event) => filterFormInputHandler(event, location, setFilterParameter)}>
+                            <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} 
+                            ref={stock3Ref}/><label htmlFor="under250">0-249</label></div>
+                            <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="under500" data-down-value={250} data-up-value={499} 
+                            ref={stock2Ref}/><label htmlFor="under500">250-499</label></div>
+                            <div className="mt-[16px] flex item-center"><input type="radio" name="stock" id="toInfinity" data-down-value={500} data-up-value="Infinity" 
+                            ref={stock1Ref}/><label htmlFor="toInfinity">500+</label></div>
+                            <button type="reset" className="mt-[16px] px-[24px] py-[16px] rounded-lg text-primary bg-violet-200 font-semibold" onClick={() => 
+                            resetButtonHandler("stock", location, setFilterParameter)}>Reset</button>
+                        </form>
                     </div>
                 </div>
-            
+
             </div>
         </div>
     )

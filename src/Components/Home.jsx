@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useOutletContext, useSearchParams } from "react-router-dom"
+import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom"
 import Card from "./Card"
 import FilterForm from "./FilterForm"
 import fewerProducts from "../Utilities/fewerProducts"
@@ -159,11 +159,19 @@ function Home() {
     //End array for use in UI
     const filteredComponentProductsData = filterParameter ? filterProducts(componentProductsData, filters) : componentProductsData
 
+    const navigator = useNavigate()
     const productListRef = useRef(null) 
     function jewelryButtonHandler() {
+        if (isLaptop) {
         const URLFilterParameter = new URLSearchParams('category=jewelery');
-        setFilterParameter(URLFilterParameter)
-        scrollIntoViewHandler(productListRef)
+        setFilterParameter(URLFilterParameter, { replace: true })
+        setTimeout(() => scrollIntoViewHandler(productListRef), 500)
+        } 
+        if(isMobile) {
+            navigator('/products')
+            const URLFilterParameter = new URLSearchParams('category=jewelery');
+            setFilterParameter(URLFilterParameter, { replace: true })
+        }
     }
 
     return (
