@@ -12,6 +12,7 @@ import cancelRangeFilter from "../Utilities/cancelRangeFilter";
 import resetButtonHandler from "../Utilities/resetButtonHandler";
 import applyRangeButtonDisplayControls from "../Utilities/applyRangeButtonDisplayControls";
 import { useMediaQuery } from 'react-responsive';
+import scrollIntoViewHandler from "../Utilities/scrollIntoViewHandler";
 
 function Home() {
     const { componentProductsData, location } = useOutletContext();
@@ -22,7 +23,7 @@ function Home() {
     function showFilterDiv() {
         setisFilterBoxExpanded((prev) => !prev)
     }
-    //Getting window height
+    //Getting window width
     const isMobile = useMediaQuery({ maxWidth: 1023 });
     const isLaptop = useMediaQuery({ minWidth: 1024 });
     //Config for current filter option form display
@@ -75,8 +76,8 @@ function Home() {
     
     //Create SP object
     const [filterParameter, setFilterParameter] = useSearchParams();
-    //Create new URLSP object with every location change
-    // const URLFilterParameter = new URLSearchParams(location.search);
+    console.log(filterParameter)
+
     const sliderOneRef = useRef(null)
     const sliderTwoRef = useRef(null)
     const sliderTrackRef = useRef(null)
@@ -113,6 +114,19 @@ function Home() {
                     default:
                         break;
                 }
+                switch(filterParameter.get("stock")) { 
+                    case "0-249":
+                        stock3Ref.current.checked = true
+                        break;
+                    case "250-499":
+                        stock2Ref.current.checked = true
+                        break;
+                    case "500-Infinity":
+                        stock1Ref.current.checked = true
+                        break;
+                    default:
+                        break;
+                }
                  
             }
         }, [filterParameter]
@@ -145,6 +159,13 @@ function Home() {
     //End array for use in UI
     const filteredComponentProductsData = filterParameter ? filterProducts(componentProductsData, filters) : componentProductsData
 
+    const productListRef = useRef(null) 
+    function jewelryButtonHandler() {
+        const URLFilterParameter = new URLSearchParams('category=jewelery');
+        setFilterParameter(URLFilterParameter)
+        scrollIntoViewHandler(productListRef)
+    }
+
     return (
         <>
             <div>
@@ -169,7 +190,7 @@ function Home() {
                             <div className="p-[30px]">
                                 <p className="font-bold text-[36px] lg:text-[60px] mb-[24px]">It&apos;s shiny cause it&apos;s good for you</p>
                                 <p className="leading-normal text-gray-600 mb-[24px] text-[18px] md:text-[20px]">If a ring is a piece of jewellery I&apos;ll be wearing for the rest of my life, a minimum 10k investment isn&apos;t insane in the grand scheme of things</p>
-                                <button type="button" className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary">Shop Jewelry</button>
+                                <button type="button" className="text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary" onClick={jewelryButtonHandler}>Shop Jewelry</button>
                             </div>
                         </div>
 
@@ -180,7 +201,7 @@ function Home() {
                     </div>
                 </section>
 
-                <section aria-labelledby="Product List" className="pt-[96px]">
+                <section aria-labelledby="Product List" className="pt-[96px]" ref={productListRef}>
                     <div className="pl-[16px] pr-[16px] flex items-baseline justify-between"><h2 id="Product List" className="text-[24px] md:text-[30px] font-bold">Our Products</h2><div className="text-primary lg:hidden hover:underline"><Link to='/products'>See All</Link>
                     <span className="material-symbols-outlined text-[13.3333px] align-bottom">arrow_forward</span></div>
                     </div>
@@ -272,7 +293,7 @@ function Home() {
                         </div>
                     }
 
-                    {  isLaptop  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white">
+                    {  isLaptop  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[128px] grid grid-cols-[repeat(4,_minmax(0,_1fr))] gap-x-[24px] gap-y-[48px] bg-white" >
                         {filteredComponentProductsData.map((product) => <Link to={`/product/${product.id}`} state={{ prevParams: location.search }} key={product.id}><Card category={product.category} title={product.title} price={product.price} image={product.image} 
                          classNames={{ blendDiv: "bg-gray-100 rounded rounded-[5%] hover:grayscale-[50%]", picture: 'w-[100%] aspect-[.67] object-contain mix-blend-multiply', 
                          pictureDiv: 'rounded rounded-[5%] overflow-hidden', mainDiv: "flex flex-col text-center bg-white text-[18px] hover:cursor-pointer", 
@@ -302,7 +323,7 @@ function Home() {
                             <div className="mx-auto">
                                 <p className="font-bold text-[36px] lg:text-[60px] text-center mb-[32px] pt-[256px]">Want to connect with us further?</p>
                                 <p className="text-center mb-[32px]">Get to know about us. We are a blah blah blah blah blah</p>
-                                <div className="pb-[128px]"><button className="block mx-auto text-[18px] py-[16px] px-[48px] text-white bg-primaryLight font-bold rounded-lg hover:bg-primary ">About us</button></div>
+                                <div className="pb-[128px]"><button className="block mx-auto text-[18px] py-[16px] px-[48px] text-primaryDark bg-transparent font-bold rounded-lg border-2 border-primaryDark">About us</button></div>
                             </div>
                     </div>
                 </section>
