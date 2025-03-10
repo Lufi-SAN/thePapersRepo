@@ -4,7 +4,6 @@ import { Outlet, NavLink, Await, useLoaderData, useLocation, Link, ScrollRestora
 import MobileMenu from "./MobileMenu";
 import { useMediaQuery } from 'react-responsive';
 import LoadingPage from "./LoadingPage";
-import Cart from "./Cart";
 
 function Layout() {
     const componentProductsData = useLoaderData()
@@ -63,19 +62,29 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
     const liobject = {
         lione: {
             clazz: "flex items-center",
-            link: "/"
+            link: "/",
+            span: "hidden",
+            spanName: null
         },
         litwo: {
             clazz: "flex items-center",
-            link: "/"
+            link: "/",
+            span: "hidden",
+            spanName: null
         },
         lithree: {
             clazz: "flex items-center",
-            link: "/"
+            link: "/",
+            span: "hidden",
+            spanName: null
         },
         lifour: {
             clazz: "flex items-center",
             link: "cart"
+        },
+        lifive: {
+            clazz: "hidden",
+            link: ""
         }
     }
     const carticonclass = "flex items-center h-full";
@@ -112,17 +121,19 @@ export function NavbarList({ulclass, liobject, cartCounter="null", carticonclass
     return (
         <>
             <ul className={ulclass} role="navigation">
-            <li className={liobject.lione.clazz}><NavLink to={liobject.lione.link}>About</NavLink></li>
-            <li className={liobject.litwo.clazz}><NavLink to={liobject.litwo.link}>Home</NavLink></li>
-            <li className={liobject.lithree.clazz}><NavLink to={liobject.lithree.link}>GHub</NavLink></li>
+            <li className={liobject.lione.clazz}><span className={liobject.lione.span}>{liobject.lione.spanName}</span><NavLink to={liobject.lione.link} className={liobject.lione.navlinkClass}>About</NavLink></li>
+            <li className={liobject.litwo.clazz}><div><span className={liobject.litwo.span}>{liobject.litwo.spanName}</span></div><NavLink to={liobject.litwo.link} className={liobject.litwo.navlinkClass}>Home</NavLink></li>
+            <li className={liobject.lithree.clazz}><div><span className={liobject.lithree.span}>{liobject.lithree.spanName}</span></div><NavLink to={liobject.lithree.link} className={liobject.lithree.navlinkClass}>GHub</NavLink></li>
             <li className={liobject.lifour.clazz}><NavLink to={liobject.lifour.link} className={carticonclass}><svg className={svgclass} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg><p>{cartCounter.length}</p>
             </NavLink></li>
+            <li className={liobject.lifive.clazz}><span className={liobject.lifive.span}>{liobject.lifive.spanName}</span><NavLink to={liobject.lifive.link} className={liobject.lifive.navlinkClass}>About</NavLink></li>
             </ul>
         </>
     )
 }
+
 
 export default Layout
 // filtering array goes here, it depends on the url params, the url params get changed in Home; Guess we use urlparams as context??

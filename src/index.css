@@ -73,8 +73,10 @@ ul.navul>li:not(:last-child) {
   @apply lg:max-w-[90rem] m-auto;
 }
 
-.active {
-  @apply text-primary underline underline-offset-4 decoration-2;
+@media (min-width: 1023px) {
+	.active {
+    @apply text-primary underline underline-offset-4 decoration-2;
+  }
 }
 
 .homeDiv :not(.topbar) {
@@ -189,4 +191,8 @@ button:hover {
 
 .textShadowOne {
   text-shadow: 0px 0px 6px black;
+}
+
+.lithreemargin {
+  margin-bottom: calc(100vh - calc(246px + 62px + 16px));
 }
