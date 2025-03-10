@@ -163,14 +163,16 @@ function Home() {
     const productListRef = useRef(null) 
     function jewelryButtonHandler() {
         if (isLaptop) {
-        const URLFilterParameter = new URLSearchParams('category=jewelery');
-        setFilterParameter(URLFilterParameter, { replace: true })
-        setTimeout(() => scrollIntoViewHandler(productListRef), 500)
+            const URLFilterParameter = new URLSearchParams('category=jewelery');
+            setFilterParameter(URLFilterParameter, { replace: true })
+            setTimeout(() => scrollIntoViewHandler(productListRef), 500)
         } 
         if(isMobile) {
             navigator('/products')
-            const URLFilterParameter = new URLSearchParams('category=jewelery');
-            setFilterParameter(URLFilterParameter, { replace: true })
+            setTimeout(() => { 
+                const URLFilterParameter = new URLSearchParams('category=jewelery');
+                setFilterParameter(URLFilterParameter, { replace: true })}
+                ,0.5)
         }
     }
 
@@ -309,11 +311,11 @@ function Home() {
                         </div>
                     }
 
-                    {  isMobile  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex overflow-x-scroll snap-x">
+                    {  isMobile  && <div className="mt-[16px] px-[16px] pt-[16px] pb-[64px] flex overflow-x-scroll snap-x snap-mandatory">
                         {
                             fewerProducts(filteredComponentProductsData).map((product) => <Card title={product.title} image={product.image}
                             key={product.id}
-                            classNames={{mainDiv: "group h-[200px] min-w-[175px] mr-[24px] relative hover:min-w-[75vw] transition-all duration-300 snap-center", 
+                            classNames={{mainDiv: "group h-[200px] min-w-[175px] mr-[24px] relative hover:min-w-[75vw] transition-all duration-300 snap-center snap-always", 
                             mobileText: "whitespace-nowrap overflow-hidden text-ellipsis absolute top-[75%] w-[100%] pl-[12px] group-hover:w-[100%] group-hover:whitespace-normal text-[18px] z-[5] text-white textShadowOne",
                             blendDiv: "bg-gray-100 h-[100%] overflow-hidden rounded-[5%]", pictureDiv: "overflow-hidden h-[100%] group-hover:overflow-visible",
                             picture: "w-[100%] object-contain mix-blend-multiply h-[100%]", firstP: "hidden", secondP: "hidden", thirdP: "hidden"
