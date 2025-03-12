@@ -32,7 +32,7 @@ export default function MobileMenu({ overlayClickHandler, bodyAffector }) {
         },
         lifive: {
             clazz: "text-[24px] pt-[16px] pb-[16px] flex mb-[16px] border-t border-t-gray-300",
-            link: "/products",
+            link: "/cart",
             span: "material-symbols-outlined text-[30px] pl-[0.75em] pr-[1em]",
             spanName: "shopping_cart",
             navlinkClass: "leading-[30px] w-[100%]"

@@ -104,13 +104,14 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
 }
 
 function ReducedNav({ location, filterPortalSetter }) {
-    const prevParams = location.state?.prevParams || ""    
-    console.log(prevParams)
+    const prevParams = location.state?.prevParams || ""
+    const where = location.pathname === "/products" ? true : false    
+    console.log(where)
     
     return(
     <>
     <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center">
-                    <Link to={`..${prevParams}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
+                    <Link to={`${ where ? `..${prevParams}` : 'products'}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
                     <button onClick={() => filterPortalSetter((prev) => !prev)} className={`${ location.pathname.startsWith("/products") ? 'block' : 'hidden'}`}><span className="material-symbols-outlined">filter_alt</span></button>
     </nav>
     </>
