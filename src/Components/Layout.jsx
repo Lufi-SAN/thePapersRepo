@@ -111,7 +111,7 @@ function ReducedNav({ location, filterPortalSetter }) {
     return(
     <>
     <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center">
-                    <Link to={`${ where ? `..${prevParams}` : 'products'}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
+                    <Link to={`..${prevParams}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
                     <button onClick={() => filterPortalSetter((prev) => !prev)} className={`${ location.pathname.startsWith("/products") ? 'block' : 'hidden'}`}><span className="material-symbols-outlined">filter_alt</span></button>
     </nav>
     </>
