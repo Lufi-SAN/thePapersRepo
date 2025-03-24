@@ -62,7 +62,7 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
     const liobject = {
         lione: {
             clazz: "flex items-center",
-            link: "/",
+            link: "/about",
             span: "hidden",
             spanName: null
         },
@@ -74,7 +74,7 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
         },
         lithree: {
             clazz: "flex items-center",
-            link: "/",
+            link: "https://github.com/Lufi-SAN",
             span: "hidden",
             spanName: null
         },
