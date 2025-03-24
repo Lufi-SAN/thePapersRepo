@@ -1,4 +1,12 @@
-export default function cartButtonHandler(id,action,setCartCounter) {
+export default function cartButtonHandler({id,action=null,setCartCounter,remove=null}) {
+    if (remove) {
+        return setCartCounter(
+            (prev) => {
+                const cartArray = [...prev];
+                return cartArray.toSpliced(cartArray.findIndex((item) => item.ID === id), 1)
+            }
+        )
+    }
     setCartCounter(
         (prev) => {
                     const cartArray = [...prev];
