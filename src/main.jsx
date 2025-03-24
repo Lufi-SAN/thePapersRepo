@@ -10,6 +10,7 @@ import ErrorPage from './Components/ErrorPage.jsx'
 import Page404 from './Components/Page404.jsx'
 import MobileGrid from './Components/MobileGrid.jsx'
 import ProductPage from './Components/ProductPage.jsx'
+import About from './Components/About.jsx'
 
 let routes = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ let routes = createBrowserRouter([
       {
         path: "product/:productID",
         element: <ProductPage/>
+      },
+      {
+        path: "about",
+        element: <About/>
       }
     ]
   },
