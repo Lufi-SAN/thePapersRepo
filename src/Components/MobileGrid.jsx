@@ -73,11 +73,19 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
     const thirdDiv = useRef(null)
     const fourthDiv = useRef(null)
     const [priceErrorMessage, setPriceErrorMessage] = useState(false)
+    
+    const firstDivButton = useRef(null)
+    const secondDivButton = useRef(null)
+    const thirdDivButton = useRef(null)
+    const fourthDivButton = useRef(null)
+
+    const DivRefs = [firstDiv, secondDiv, thirdDiv, fourthDiv]
 
     useEffect(
         () => {
             bodyOverflowAffector.current.parentElement.parentElement.style.overflow = 'hidden';
-        
+            console.log(bodyOverflowAffector.current.parentElement.parentElement)
+
             let menuSetter = setTimeout(
                 () => {
                     menuGridRef.current.classList.remove("menuGridOut"),
@@ -125,18 +133,52 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
         }, [filterParameter]
     )
 
+    useEffect(
+        () => {
+                const observer = new IntersectionObserver(callback, {threshold: 1.0})
+                function callback(entries) {
+                    entries.forEach((entry) => {
+                        if(entry.isIntersecting) {
+                            console.log(entry.target)
+                            let target = entry.target.id.at(-1)
+                            let element = entry.target.parentElement.parentElement.firstChild.childNodes[target]
+                            element.style.borderBottom = "solid #774fef 3px"
+                            element.style.color = "#774fef"
+                        } else {
+                            let target = entry.target.id.at(-1)
+                            let element = entry.target.parentElement.parentElement.firstChild.childNodes[target]
+                            element.style.borderBottom = ""
+                            element.style.color = "oklch(0.707 0.022 261.325)"
+                        }
+                    }
+                    )
+                }
+
+                DivRefs.forEach((ref) => {
+                    if(ref.current) observer.observe(ref.current)
+                })
+
+                return () => {       
+                        DivRefs.forEach((ref) => {
+                            if(ref.current) observer.unobserve(ref.current)
+                        })
+                }
+            
+        }, []
+    )
+
     return (
         <div className="bg-black/[.6] h-[100%] w-[100%] z-[1000] fixed top-0" onClick={() => { menuGridRef.current.classList.remove("menuGridIn"); menuGridRef.current.classList.add("menuGridOut"); setTimeout(overlayClickHandler, 300)}} >
-            <div onClick={(event) => event.stopPropagation()} className={`bg-white fixed bottom-0 menuGridOut transition-[bottom] duration-[0.3s] ease-linear w-[100vw] rounded-2xl`} ref={menuGridRef}>
-                <ul className="flex max-w-[100%] min-w-[100%] justify-around pb-[1em] pt-[0.5em]">
-                    <li className="underline"><button onClick={() => scrollIntoViewHandler(firstDiv)}>Category</button></li>
-                    <li><button onClick={() => scrollIntoViewHandler(secondDiv)}>Price</button></li>
-                    <li><button onClick={() => scrollIntoViewHandler(thirdDiv)}>Rating</button></li>
-                    <li><button onClick={() => scrollIntoViewHandler(fourthDiv)}>Stock</button></li>
+            <div onClick={(event) => event.stopPropagation()} className={`bg-white fixed bottom-0 menuGridOut transition-[bottom] duration-[0.3s] ease-linear w-[100vw] rounded-2xl px-[]`} ref={menuGridRef}>
+                <ul className="flex max-w-[100%] min-w-[100%] justify-around pt-[0.5em] border-b border-b-gray-300">
+                    <li className="pb-[1em] text-gray-400" ref={firstDivButton}><button onClick={() => scrollIntoViewHandler(firstDiv)}>Category</button></li>
+                    <li className="pb-[1em] text-gray-400" ref={secondDivButton}><button onClick={() => scrollIntoViewHandler(secondDiv)}>Price</button></li>
+                    <li className="pb-[1em] text-gray-400" ref={thirdDivButton}><button onClick={() => scrollIntoViewHandler(thirdDiv)}>Rating</button></li>
+                    <li className="pb-[1em] text-gray-400" ref={fourthDivButton}><button onClick={() => scrollIntoViewHandler(fourthDiv)}>Stock</button></li>
                 </ul>
                 
-                <div className="flex overflow-scroll bg-[green] snap-x snap-mandatory pt-[1em] bg-[inherit]" >
-                    <div className="min-w-[100%] snap-start snap-always" ref={firstDiv}>
+                <div className="flex overflow-scroll bg-[green] snap-x snap-mandatory pt-[4px] bg-[inherit]" >
+                    <div className="min-w-[100%] snap-start snap-always px-[8px]" ref={firstDiv} id="ButtonDiv0">
                         <form onInput={(event) => filterFormInputHandler(event, location, setFilterParameter)}>
                         <div className="flex item-center mt-[8px]">
                             <input type="checkbox" name="category" id="mensClothing" data-value="men's clothing" className="h-[1rem] aspect-square" ref={MCRef}/>
@@ -157,9 +199,9 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
                         </form>
                     </div>
                     {/* price */}
-                    <div className="min-w-[100%] snap-start snap-always bg-[purple]" ref={secondDiv}>
+                    <div className="min-w-[100%] snap-start snap-always " ref={secondDiv} id="ButtonDiv1">
                         <form className="whitespace-nowrap">
-                            <div data-slider-container className="relative pb-[52px] bg-[red] touch-none" style={{ touchAction: "none" }} > 
+                            <div data-slider-container className="relative pb-[52px] touch-none" style={{ touchAction: "none" }} > 
                                 <div data-slider-track className="w-full h-[5px] absolute m-auto top-0 bottom-0 rounded-[5px] bg-primary" ref={sliderTrackRef} 
                                 ></div>
                                 
@@ -200,7 +242,7 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
                         </form>
                     </div>
                     {/* rating */}
-                    <div className="min-w-[100%] snap-start snap-always bg-[yellow]" ref={thirdDiv}>
+                    <div className="min-w-[100%] snap-start snap-always " ref={thirdDiv} id="ButtonDiv2">
                         <form onInput={(event) => filterFormInputHandler(event, location, setFilterParameter)}>
                             <div className="flex item-center"><input type="radio" name="rating" className="h-[1rem] aspect-square self-center" 
                             id="value4" data-value="4" ref={rating4Ref}/><label htmlFor="value4" className="font-semibold ml-[12px] text-[1rem] mr-[16px]">
@@ -227,7 +269,7 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
                         </form>
                     </div>
                     {/* stock */}
-                    <div className="min-w-[100%] snap-start snap-always bg-[blue]" ref={fourthDiv}>
+                    <div className="min-w-[100%] snap-start snap-always " ref={fourthDiv} id="ButtonDiv3">
                         <form onInput={(event) => filterFormInputHandler(event, location, setFilterParameter)}>
                             <div className="flex item-center"><input type="radio" name="stock" id="under250" data-down-value={0} data-up-value={249} 
                             ref={stock3Ref}/><label htmlFor="under250">0-249</label></div>
