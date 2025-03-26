@@ -333,10 +333,12 @@ function Home() {
                             <div className="mx-auto">
                                 <p className="font-bold text-[36px] lg:text-[60px] text-center mb-[32px] pt-[256px]">Want to connect with us further?</p>
                                 <p className="text-center mb-[32px]">Get to know about us. We are a blah blah blah blah blah</p>
-                                <div className="pb-[128px]"><button className="block mx-auto text-[18px] py-[16px] px-[48px] text-primaryDark bg-transparent font-bold rounded-lg border-2 border-primaryDark">About us</button></div>
+                                <div className="pb-[128px]"><Link to={"about"} className="block mx-auto text-[18px] py-[16px] px-[48px] text-primaryDark bg-transparent font-bold rounded-lg border-2 border-primaryDark max-w-fit">About us</Link></div>
                             </div>
                     </div>
                 </section>
+
+                
             </div>
         </>
     )

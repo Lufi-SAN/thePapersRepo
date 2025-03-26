@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import cartButtonHandler from "../Utilities/cartButtonHandler"
-import { useOutletContext, useParams } from "react-router-dom"
+import { useOutletContext, useParams, Link } from "react-router-dom"
 
 export default function ProductPage() {
     const {bodyOverflowAffector, componentProductsData, cartCounter, setCartCounter} = useOutletContext();
@@ -32,6 +32,7 @@ export default function ProductPage() {
                 <div data-addtobag className="w-[100%]">{checkProductExistence ? 
                     <PerpetualAddToCartButton productQuantity={productQuantity} productID={productID} setCartCounter={setCartCounter} /> : 
                     <AddToCartButton productID={productID} setCartCounter={setCartCounter}/>}</div>
+                <Link to={"/cart"} className="text-[20px] mt-[16px] text-center text-primaryLight underline hover:text-primary">Go to Cart?</Link>
             </div>
         </div>
         <div data-image className='min-w-[45%] bg-no-repeat bg-contain bg-center' style={{ backgroundImage: `url(${componentProductsData[index].image})`}}>

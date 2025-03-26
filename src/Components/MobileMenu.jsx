@@ -7,7 +7,7 @@ export default function MobileMenu({ overlayClickHandler, bodyAffector }) {
     const liobject = {
         lione: {
             clazz: "text-[24px] pt-[16px] pb-[16px] flex border-b border-b-gray-300",
-            link: "/",
+            link: "/about",
             span: "material-symbols-outlined text-[30px] pl-[0.75em] pr-[1em]",
             spanName: "info",
             navlinkClass: "leading-[30px] w-[100%]"
