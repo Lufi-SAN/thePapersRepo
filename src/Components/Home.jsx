@@ -137,9 +137,19 @@ function Home() {
         category: filterParameter.getAll("category"),
         price: filterParameter.get("price")?.split('-') || [],
         rating: filterParameter.get("rating")?.split('-') || [],
-        stock: filterParameter.get("stock") ? filterParameter.get("stock").split("-").map((item) => Number(item)) : []
+        stock: filterParameter.get("stock") ? filterParameter.get("stock").split("-").map((item) => item) : []
 
     }
+
+    const filterPills = [
+        filterParameter.getAll("category") || [], 
+        filterParameter.getAll("price") || [], 
+        filterParameter.getAll("rating") || [],
+        filterParameter.getAll("stock") || []
+    ]
+
+    console.log(filterPills)
+
     // rating: filterParameter.getAll("rating").length !== 0 ? Array.from(new Set(Array.from(filterParameter.getAll("rating")).join().split("-").join(",").split(","))) : []
     // Above was my method for chnaging the 4-5/2-3/etc. to a sorted array with no repeated numbers. I'm keeping it in here cause its cool 
     // This was the filter config: const matchesRating = filters.rating.length !== 0 ? filters.rating[0] <= product.rating.rate <= filters.rating[filters.rating.length - 1] : true;
@@ -299,7 +309,9 @@ function Home() {
 
                     {
                         isFilterBoxExpanded && <div role="Product Filters" id="filterBoxDiv" aria-expanded={isFilterBoxExpanded} className="hidden lg:flex" >
-                            <p>Filters</p>
+                            <div>
+                                {filterPills.map((item) => <PillComponent arrayItem={item} itemIndex={filterPills.indexOf(item)}/>)}
+                            </div>
                         </div>
                     }
 
@@ -343,4 +355,22 @@ function Home() {
         </>
     )
 }
+
+function PillComponent({arrayItem, itemIndex}) {
+    console.log(itemIndex)
+    if (arrayItem.length === 0) return; 
+    return (
+        <>
+            {arrayItem.map((item) => 
+                <div className="px-16px py-24px rounded rounded-md bg-primary text-white">
+                    {item}
+                    <span></span>
+                </div>
+            )}
+        </>
+    )
+}
+
+
 export default Home
+

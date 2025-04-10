@@ -1,0 +1,3 @@
+Preloading in index.html for largest image on load and google fonts
+  <script type="module" src="/src/main.jsx"></script>
+src has assets, Components, Utilities, index.css & main.jsx
