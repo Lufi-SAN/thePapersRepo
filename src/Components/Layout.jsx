@@ -1,6 +1,6 @@
 import { useState, Suspense, useRef } from "react"
 import { createPortal } from "react-dom";
-import { Outlet, NavLink, Await, useLoaderData, useLocation, Link, ScrollRestoration } from "react-router-dom"
+import { Outlet, NavLink, Await, useLoaderData, useLocation, Link, ScrollRestoration, Form } from "react-router-dom"
 import MobileMenu from "./MobileMenu";
 import { useMediaQuery } from 'react-responsive';
 import LoadingPage from "./LoadingPage";
@@ -50,7 +50,9 @@ function Layout() {
                     }}
                 </Await>
             </Suspense>
-            <footer role="footer"></footer>
+            <footer role="footer">
+                <Footer />
+            </footer>
             <ScrollRestoration getKey={(location, matches) => { return location.pathname }} />
             </div>
         </>
@@ -135,6 +137,23 @@ export function NavbarList({ulclass, liobject, cartCounter="null", carticonclass
     )
 }
 
+function Footer() {
+    return (
+        <>
+            <div className="bg-[purple] flex flex-col pl-[16px]">
+                <Form className="flex flex-col">
+                    <label htmlFor="emale">Sign up for our newsletter</label>
+                    <label htmlFor="emale">The latest deals and savings, sent to your inbox weekly.</label>
+                    <div className="flex">
+                        <input type="email" name="mail" id="emale" />
+                        <button type="submit">Sign up</button>
+                    </div>
+                </Form>
+                <p className="border-t border-t-gray-500 mt-[16px] pt-[16px]">{`Copyright ${"\u00A9"} ${new Date().getFullYear()} thePapers, Inc.`}</p>
+            </div>
+        </>
+    )
+}
 
 export default Layout
 // filtering array goes here, it depends on the url params, the url params get changed in Home; Guess we use urlparams as context??
