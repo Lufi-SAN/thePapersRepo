@@ -76,7 +76,7 @@ function Home() {
     
     //Create SP object
     const [filterParameter, setFilterParameter] = useSearchParams();
-    console.log(filterParameter)
+    // console.log(filterParameter)
 
     const sliderOneRef = useRef(null)
     const sliderTwoRef = useRef(null)
@@ -308,8 +308,8 @@ function Home() {
                     </div>
 
                     {
-                        isFilterBoxExpanded && <div role="Product Filters" id="filterBoxDiv" aria-expanded={isFilterBoxExpanded} className="hidden lg:flex" >
-                            <div>
+                        isFilterBoxExpanded && <div role="Product Filters" id="filterBoxDiv" aria-expanded={isFilterBoxExpanded} className="hidden lg:flex pl-[16px]" >
+                            <div className="">
                                 {filterPills.map((item) => <PillComponent arrayItem={item} itemIndex={filterPills.indexOf(item)}/>)}
                             </div>
                         </div>
@@ -357,15 +357,30 @@ function Home() {
 }
 
 function PillComponent({arrayItem, itemIndex}) {
-    console.log(itemIndex)
+    const iconMap = {
+        "men's clothing" : "fa-solid fa-person",
+        electronics: "fa-solid fa-laptop",
+        "women's clothing": "fa-solid fa-person-dress",
+        jewelery: "fa-regular fa-gem",
+        1: "fa-solid fa-money-bill-wave",
+        2: "fa-solid fa-star",
+        3: "fa-solid fa-box" 
+    }
     if (arrayItem.length === 0) return; 
     return (
         <>
-            {arrayItem.map((item) => 
-                <div className="px-16px py-24px rounded rounded-md bg-primary text-white">
+            {arrayItem.map((item) => {
+                let faPlaceholder;
+                if (itemIndex > 0) {
+                    faPlaceholder = iconMap[itemIndex]
+                } else {
+                    faPlaceholder = iconMap[item]
+                }
+                return <div className="px-16px py-24px rounded rounded-md bg-primary text-white">
                     {item}
-                    <span></span>
+                    <span className={faPlaceholder}></span>
                 </div>
+                }
             )}
         </>
     )
