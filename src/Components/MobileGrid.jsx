@@ -84,7 +84,7 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
     useEffect(
         () => {
             bodyOverflowAffector.current.parentElement.parentElement.style.overflow = 'hidden';
-            console.log(bodyOverflowAffector.current.parentElement.parentElement)
+            // console.log(bodyOverflowAffector.current.parentElement.parentElement)
 
             let menuSetter = setTimeout(
                 () => {
@@ -139,7 +139,7 @@ function MGFilterCompnt({ bodyOverflowAffector, overlayClickHandler, location, f
                 function callback(entries) {
                     entries.forEach((entry) => {
                         if(entry.isIntersecting) {
-                            console.log(entry.target)
+                            // console.log(entry.target)
                             let target = entry.target.id.at(-1)
                             let element = entry.target.parentElement.parentElement.firstChild.childNodes[target]
                             element.style.borderBottom = "solid #774fef 3px"

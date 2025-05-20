@@ -4,8 +4,8 @@ import { useEffect, useState } from "react"
 
 function Cart() {
     let {cartCounter, setCartCounter, componentProductsData, bodyOverflowAffector, isMobile} = useOutletContext()
-    console.log(cartCounter)
-    console.log(componentProductsData)
+    // console.log(cartCounter)
+    // console.log(componentProductsData)
 
     let [priceTotal, setPriceTotal] = useState(0)
     function ad() {

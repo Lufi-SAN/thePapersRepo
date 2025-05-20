@@ -1,6 +1,9 @@
-import { useEffect } from "react"
+import { createContext, useContext, useEffect } from "react"
 import cartButtonHandler from "../Utilities/cartButtonHandler"
 import { useOutletContext, useParams, Link } from "react-router-dom"
+import { useMediaQuery } from 'react-responsive';
+
+const ProductPageContext = createContext({})
 
 export default function ProductPage() {
     const {bodyOverflowAffector, componentProductsData, cartCounter, setCartCounter} = useOutletContext();
@@ -17,29 +20,125 @@ export default function ProductPage() {
         }, []
     )
     
-    return(
-    <div className="w-[100%] px-[3vw] text-[16px]">
-    <div className="flex pt-[2em]">
-        <div className="max-w-[55%]">
-            <div className="flex flex-col">
-                <div data-title className="font-bold text-[36px] lg:text-[36px] pb-[16px]">{componentProductsData[index].title}</div>
-                <div data-pricerating className="flex items-center pb-[16px]">
-                    <div className="text-[24px] mr-[8px]">{componentProductsData[index].price}</div>
-                    <div className="flex items-center text-[18px] text-gray-400 border-l border-l-gray-700 pl-[8px]">{componentProductsData[index].rating.rate}<span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }} >grade</span></div>
+    const isMobile = useMediaQuery({ maxWidth: 1023 });
+    const isLaptop = useMediaQuery({ minWidth: 1024 });
+
+    if (isLaptop) return (
+    <ProductPageContext.Provider value={{componentProductsData, index, checkProductExistence, productQuantity, productID, setCartCounter}}>
+        <div className="w-[100%] px-[3vw] text-[16px]">
+        <div className="flex pt-[2em]">
+            <div className="max-w-[55%]">
+                <div className="flex flex-col">
+                    <Title />
+                    <div data-pricerating className="flex items-center pb-[16px]">
+                        <Price />
+                        <Rating />
+                    </div>
+                    <Description />
+                    <Stock />
+                    <ActionButton />
+                    <GoToCartLink />
                 </div>
-                <div data-description className="text-[24px] text-gray-400 pb-[16px] leading-[1.05]"><p>{componentProductsData[index].description}</p></div>
-                <div data-stock className="flex pb-[128px]"><p className="text-gray-400 text-[18px]"><span className="text-green-500 text-[24px]">{componentProductsData[index].rating.count}</span> in stock and ready to ship</p></div>
-                <div data-addtobag className="w-[100%]">{checkProductExistence ? 
-                    <PerpetualAddToCartButton productQuantity={productQuantity} productID={productID} setCartCounter={setCartCounter} /> : 
-                    <AddToCartButton productID={productID} setCartCounter={setCartCounter}/>}</div>
-                <Link to={"/cart"} className="text-[20px] mt-[16px] text-center text-primaryLight underline hover:text-primary">Go to Cart?</Link>
+            </div>
+            <ProductImage></ProductImage>
+        </div>
+        </div>
+    </ProductPageContext.Provider>
+    )
+
+    if (isMobile) return (
+    <ProductPageContext.Provider value={{componentProductsData, index, checkProductExistence, productQuantity, productID, setCartCounter}}>
+        <div className="w-[100%] px-[3vw] text-[16px]">
+            <div className="flex flex-col pt-[2em]">
+                <div className="flex flex-col">
+                    <Title />
+                    <div className="flex">
+                        <Price />
+                        <Rating />
+                    </div>
+                    <Description />
+                    <Stock />
+                </div>
+                <ProductImage>
+                    <img src={componentProductsData[index].image} alt="Product Image`" className="w-[100%] h-[100%] object-contain"/>
+                </ProductImage>
+                <ActionButton />
+                <GoToCartLink />
             </div>
         </div>
-        <div data-image className='min-w-[45%] bg-no-repeat bg-contain bg-center' style={{ backgroundImage: `url(${componentProductsData[index].image})`}}>
-            {/* <img src={componentProductsData[index].image} alt="Product Image`" className="w-[100%] h-[100%] object-contain"/> */}
+    </ProductPageContext.Provider>
+    )
+}
+
+function Title () {
+    const { componentProductsData, index } = useContext(ProductPageContext)
+
+    return (
+        <div data-title className="font-bold lg:text-[36px] pb-[16px]">{componentProductsData[index].title}</div>
+    )
+}
+
+function Price () {
+    const { componentProductsData, index } = useContext(ProductPageContext)
+
+    return (
+        <div className="lg:text-[24px] mr-[8px]">{componentProductsData[index].price}</div>
+    )
+}
+
+function Rating () {
+    const { componentProductsData, index } = useContext(ProductPageContext)
+
+    return (
+        <div className="flex items-center lg:text-[18px] text-gray-400 border-l border-l-gray-700 pl-[8px]">
+            {componentProductsData[index].rating.rate}<span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }} >grade</span>
         </div>
-    </div>
-    </div>
+    )
+}
+
+function Description () {
+    const { componentProductsData, index } = useContext(ProductPageContext)
+
+    return (
+        <div data-description className="lg:text-[24px] text-gray-400 pb-[16px] lg:leading-[1.05]"><p>{componentProductsData[index].description}</p></div>
+    )
+}
+
+function Stock () {
+    const { componentProductsData, index } = useContext(ProductPageContext)
+
+    return (
+        <div data-stock className="flex pb-[128px]"><p className="text-gray-400 lg:text-[18px]"><span className="text-green-500 lg:text-[24px]">
+            {componentProductsData[index].rating.count}</span> in stock and ready to ship</p>
+        </div>
+    )
+}
+
+function ActionButton () {
+    const {checkProductExistence, productQuantity, productID, setCartCounter} = useContext(ProductPageContext)
+
+    return (
+        <div data-addtobag className="w-[100%]">{checkProductExistence ? 
+            <PerpetualAddToCartButton productQuantity={productQuantity} productID={productID} setCartCounter={setCartCounter} /> : 
+            <AddToCartButton productID={productID} setCartCounter={setCartCounter}/>}
+        </div>
+    )
+}
+
+function GoToCartLink () {
+    return (
+        <Link to={"/cart"} className="lg:text-[20px] mt-[16px] text-center text-primaryLight underline hover:text-primary">Go to Cart?</Link>
+    )
+}
+
+function ProductImage ({children = null}) {
+    const { componentProductsData, index } = useContext(ProductPageContext)
+    const isLaptop = useMediaQuery({ minWidth: 1024 });
+
+    return (
+        <div data-image className='lg:min-w-[45%] lg:bg-no-repeat lg:bg-contain lg:bg-center' style={isLaptop ? { backgroundImage: `url(${componentProductsData[index].image})`} : {}}>
+            {children}
+        </div>
     )
 }
 

@@ -1,7 +1,7 @@
 export default function filterFormInputHandler(event, location, setFilterParameter) {
         event.preventDefault();
         const URLFilterParameter = new URLSearchParams(location.search);
-        console.log(`${URLFilterParameter}`);
+        // console.log(`${URLFilterParameter}`);
         setFilterParameter((prevFilterParams) => {
             const typeOfInput = event.target.name;
             let returnObject = { ...prevFilterParams };
