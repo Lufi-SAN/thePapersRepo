@@ -22,8 +22,8 @@ export default function MobileMenu({ overlayClickHandler, bodyAffector }) {
         lithree: {
             clazz: "text-[24px] pt-[16px] pb-[16px] flex lithreemargin",
             link: "/",
-            span: "material-symbols-outlined text-[30px] pl-[0.75em] pr-[1em]",
-            spanName: "home",
+            span: "fab fa-github text-primary text-[30px] pl-[0.75em] pr-[1em]",
+            spanName: null,
             navlinkClass: "leading-[30px] w-[100%]"
         },
         lifour: {
