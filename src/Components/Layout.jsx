@@ -37,7 +37,7 @@ function Layout() {
             <header className="sticky top-0 z-[555]" role="header">
                 {fullNav && <FullNav textcolor={textcolor} textcolor2={textcolor2} isMobile={isMobile} setMenuOpen={setMenuOpen} menuOpen={menuOpen} isLaptop={isLaptop}  
                 bodyOverflowAffector={bodyOverflowAffector} cartCounter={cartCounter}/> }
-            {reducedNav && <ReducedNav location={location} filterPortalSetter={setFilterPortal}/>}
+                {reducedNav && <ReducedNav location={location} filterPortalSetter={setFilterPortal}/>}
             </header>
             <Suspense fallback={<LoadingPage />}>
                 <Await resolve={componentProductsData.productsData}>
@@ -96,7 +96,9 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
     return( 
     <>
         <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center lg:justify-normal">
-            <h1 className={`text-[30px] lg:text-[36px] font-extrabold text-primary font-azeret ${textcolor}`} aria-label="Company Logo">the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
+            <Link to={"/"}>
+                <h1 className={`text-[30px] lg:text-[36px] font-extrabold text-primary font-azeret ${textcolor}`} aria-label="Company Logo">the<span className={`inline-block py-1 bg-primary ${textcolor2}`}>papers</span></h1>
+            </Link>
             { isMobile && <div className="mr-0"><button onClick={() => setMenuOpen(true)}><span className="material-symbols-outlined">menu</span></button></div>}
             { menuOpen && createPortal(<MobileMenu overlayClickHandler={() => setMenuOpen(false)} bodyAffector={bodyOverflowAffector} />, document.body)}
             { isLaptop &&  <NavbarList ulclass={ulclass} liobject={liobject} cartCounter={cartCounter} carticonclass={carticonclass} svgclass={svgclass}/>}
@@ -108,13 +110,13 @@ function FullNav ({textcolor, textcolor2, isMobile, setMenuOpen, menuOpen, isLap
 function ReducedNav({ location, filterPortalSetter }) {
     const prevParams = location.state?.prevParams || ""
     const where = location.pathname === "/products" ? true : false    
-    console.log(where)
+    // console.log(where)
     
     return(
     <>
     <nav className="flex w-full px-6 py-6 border-b border-b-slate-200 bg-white justify-between items-center">
-                    <Link to={`..${prevParams}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
-                    <button onClick={() => filterPortalSetter((prev) => !prev)} className={`${ location.pathname.startsWith("/products") ? 'block' : 'hidden'}`}><span className="material-symbols-outlined">filter_alt</span></button>
+        <Link to={`..${prevParams}`} relative="path"><span className="material-symbols-outlined">arrow_back_ios</span></Link>
+        <button onClick={() => filterPortalSetter((prev) => !prev)} className={`${ location.pathname.startsWith("/products") ? 'block' : 'hidden'}`}><span className="material-symbols-outlined">filter_alt</span></button>
     </nav>
     </>
     )
@@ -140,7 +142,7 @@ export function NavbarList({ulclass, liobject, cartCounter="null", carticonclass
 function Footer() {
     return (
         <>
-            <div className="bg-[purple] flex flex-col pl-[16px]">
+            <div className="bg-primaryDark flex flex-col pl-[16px]">
                 <Form className="flex flex-col">
                     <label htmlFor="emale">Sign up for our newsletter</label>
                     <label htmlFor="emale">The latest deals and savings, sent to your inbox weekly.</label>
